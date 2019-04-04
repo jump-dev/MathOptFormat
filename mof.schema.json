@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/schema#",
-    "$id": "https://github.com/odow/MathOptFormat.jl/tree/master/src/MOF/mof.schema.json",
+    "$id": "https://github.com/odow/MathOptFormat/blob/master/mof.schema.json",
     "title": "The schema for MathOptFormat",
     "type": "object",
     "required": ["version", "variables", "objectives", "constraints"],
