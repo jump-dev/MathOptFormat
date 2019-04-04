@@ -5,7 +5,7 @@ README from a provided schema. See `main()` for details.
 package main
 
 import (
-    "encoding/json"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -69,9 +69,9 @@ func readFileToBytes(filename string) ([]byte, error) {
 }
 
 type Set struct {
-    Head string
+	Head        string
 	Description string
-	Example string
+	Example     string
 }
 
 func processOneOf(data map[string]interface{}) []Set {
