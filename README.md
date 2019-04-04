@@ -16,8 +16,34 @@ encoded in the form
 where `x ∈ ℝᴺ`, `fᵢ: ℝᴺ → ℝ`, and `gⱼ: ℝᴺ → ℝᴹʲ`, and `Sⱼ ⊆ ℝᴹʲ`.
 
 The functions `fᵢ` and `gⱼ`, and sets `Sⱼ` supported by MathOptFormat are
-detailed below. This list is not exhaustive. It is intended that MathOptFormat
-will be extended in future versions to support additional functions and sets.
+defined in the [MathOptFormat schema](#the-schema).
+
+The current list of supported functions and sets is not exhaustive. It is
+intended that MathOptFormat will be extended in future versions to support
+additional functions and sets.
+
+## The schema
+
+A [JSON schema](http://json-schema.org/) for the `.mof.json` file-format is
+provided in the file [`mof.schema.json`](https://github.com/odow/MathOptFormat/blob/master/mof.schema.json).
+
+It is intended for the schema to be self-documenting. Instead of modifying or
+adding to this documentation, clarifying edits should be made to the
+`description` field of the relevant part of the schema.
+
+### List of supported functions
+
+The list of functions supported by MathOptFormat are contained in the
+`#/definitions/scalar_functions` and `#/definitions/vector_functions` fields of
+the schema. Scalar functions are functions for which `Mj=1`, while vector
+functions are functions for which `Mj≥1`.
+
+### List of supported sets
+
+The list of sets supported by MathOptFormat are contained in the
+`#/definitions/scalar_sets` and `#/definitions/vector_sets` fields of the
+schema. Scalar sets are sets for which `Mj=1`, while vector sets are sets for
+which `Mj≥1`.
 
 ## An example
 
@@ -135,12 +161,7 @@ required keys at the top level:
       In this example, the set `[1, ∞)` is the MathOptFormat set `GreaterThan`
       with a lower bound of `1`.
 
-## The schema
-
-A [JSON schema](http://json-schema.org/) for the `mof.json` file-format is
-provided in the file `mof.schema.json`.
-
-## Examples
+### Other examples
 
 A number of examples of optimization problems encoded using MathOptFormat are
-provided in the `/examples` directory.
+provided in the [`/examples` directory](https://github.com/odow/MathOptFormat/tree/master/examples).
