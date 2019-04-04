@@ -1,5 +1,7 @@
 # MathOptFormat
 
+_WARNING: this file format is under active development. Things may change!_
+
 This repository describes a file-format for mathematical optimization problems
 called _MathOptFormat_ with the file extension `.mof.json`.
 
