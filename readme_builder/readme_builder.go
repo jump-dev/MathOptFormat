@@ -137,7 +137,8 @@ func processStrings(title string, data map[string]interface{}, key string) strin
 		"",
 		"| Name | Description | Example |",
 		"| ---- | ----------- | ------- |"}
-	sets := nestedGet(data, []string{"definitions", key})
+	definitions := data["definitions"].(map[string]interface{})
+	sets := definitions[key].(map[string]interface{})
 	for _, setData := range sets["oneOf"].([]interface{}) {
 		for _, set := range processOneOf(setData.(map[string]interface{})) {
 			setStrings = append(
@@ -146,13 +147,4 @@ func processStrings(title string, data map[string]interface{}, key string) strin
 		}
 	}
 	return strings.Join(setStrings, "\n")
-}
-
-func nestedGet(myMap map[string]interface{}, keys []string) map[string]interface{} {
-	var d map[string]interface{}
-	d = myMap
-	for _, key := range keys {
-		d = d[key].(map[string]interface{})
-	}
-	return d
 }
