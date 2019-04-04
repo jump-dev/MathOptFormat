@@ -38,12 +38,70 @@ The list of functions supported by MathOptFormat are contained in the
 the schema. Scalar functions are functions for which `Mj=1`, while vector
 functions are functions for which `Mj≥1`.
 
+Here is a summary of the functions defined by MathOptFormat.
+
+#### Scalar Functions
+
+| Name | Description | Example |
+| ---- | ----------- | ------- |
+| `"SingleVariable"` | The scalar variable `variable`. | {"head": "SingleVariable", "variable": "x"} |
+| `"ScalarAffineFunction"` | The function `a'x + b`, where `a` is a sparse vector specified by a list of `ScalarAffineTerm`s in `terms` and `b` is the scalar in `constant`. Duplicate variables in `terms` are accepted, and the corresponding coefficients are summed together. | {"head": "ScalarAffineFunction", "constant": 1.0, "terms": [{"coefficient": 2.5, "variable": "x"}]} |
+| `"ScalarQuadraticFunction"` | The function `0.5x'Qx + a'x + b`, where `a` is a sparse vector of `ScalarAffineTerm`s in `affine_terms`, `b` is the scalar `constant`, and `Q` is a symmetric matrix specified by a list of `ScalarQuadraticTerm`s in `quadratic_terms`. Duplicate indices in `affine_terms` and `quadratic` are accepted, and the corresponding coefficients are summed together. Mirrored indices in `quadratic_terms` (i.e., `(i,j)` and `(j, i)`) are considered duplicates; only one need to be specified. | {"head": "ScalarAffineFunction", "constant": 1.0, "affine_terms": [{"coefficient": 2.5, "variable": "x"}], "quadratic_terms": [{"coefficient": 2.0, "variable_1": "x", "variable_2": "y"}]} |
+| `"Nonlinear"` | An expression graph representing a scalar function. |  |
+
+#### Vector Functions
+
+| Name | Description | Example |
+| ---- | ----------- | ------- |
+| `"VectorOfVariables"` | An ordered list of variables. | {"head": "VectorOfVariables", "variables": ["x", "y"]} |
+| `"VectorAffineFunction"` | The function `Ax + b`, where `A` is a sparse matrix specified by a list of `VectorAffineTerm`s in `terms` and `b` is a dense vector specified by `constants`. | {"head": "VectorAffineFunction", "constants": [1.0], "terms": [{"output_index": 1, "scalar_term": {"coefficient": 2.5, "variable": "x"}}]} |
+| `"VectorQuadraticFunction"` | The vector-valued quadratic function `q(x) + Ax + b`, where `q(x)` is specified by a list of `VectorQuadraticTerm`s in `quadratic_terms`, `A` is a sparse matrix specified by a list of `VectorAffineTerm`s in `affine_terms` and `b` is a dense vector specified by `constants`. |  |
+
 ### List of supported sets
 
 The list of sets supported by MathOptFormat are contained in the
 `#/definitions/scalar_sets` and `#/definitions/vector_sets` fields of the
 schema. Scalar sets are sets for which `Mj=1`, while vector sets are sets for
 which `Mj≥1`.
+
+Here is a summary of the sets defined by MathOptFormat.
+
+#### Scalar Sets
+
+| Name | Description | Example |
+| ---- | ----------- | ------- |
+| `"LessThan"` | (-∞, upper] | {"head": "LessThan", "upper": 2.1} |
+| `"GreaterThan"` | [lower, ∞) | {"head": "GreaterThan", "lower": 2.1} |
+| `"EqualTo"` | {value} | {"head": "EqualTo", "value": 2.1} |
+| `"Interval"` | [lower, upper] | {"head": "Interval", "lower": 2.1, "upper": 3.4} |
+| `"Semiinteger"` | {0} ∪ {lower, lower + 1, ..., upper} | {"head": "Semiinteger", "lower": 2, "upper": 4} |
+| `"Semicontinuous"` | {0} ∪ [lower, upper] | {"head": "Semicontinuous", "lower": 2.1, "upper": 3.4} |
+| `"ZeroOne"` | {0, 1} | {"head": "ZeroOne"} |
+| `"Integer"` | ℤ | {"head": "Integer"} |
+
+#### Vector Sets
+
+| Name | Description | Example |
+| ---- | ----------- | ------- |
+| `"ExponentialCone"` | [x, y, z] ∈ {R³: y * exp(x / y) ≤ z, y ≥ 0} | {"head": "ExponentialCone"} |
+| `"DualExponentialCone"` | [u, v, w] ∈ {R³: -u * exp(v / u) ≤ exp(1) * w, u < 0} | {"head": "DualExponentialCone"} |
+| `"SOS1"` | A special ordered set of type I. | {"head": "SOS1", "weights": [1, 3, 2]} |
+| `"SOS2"` | A special ordered set of type II. | {"head": "SOS2", "weights": [1, 3, 2]} |
+| `"GeometricMeanCone"` | [t, x] ∈ {R^{dimension}: t ≤ (Πxᵢ)^{1 / (dimension-1)}} | {"head": "GeometricMeanCone", "dimension": 3} |
+| `"SecondOrderCone"` | [t, x] ∈ {R^{dimension} : t ≥ \|\|x\|\|₂ | {"head": "SecondOrderCone", "dimension": 3} |
+| `"RotatedSecondOrderCone"` | [t, u, x] ∈ {R^{dimension} : 2tu ≥ (\|\|x\|\|₂)²; t, u ≥ 0} | {"head": "RotatedSecondOrderCone", "dimension": 3} |
+| `"Zeros"` | {0}^{dimension} | {"head": "Zeros", "dimension": 3} |
+| `"Reals"` | R^{dimension} | {"head": "Reals", "dimension": 3} |
+| `"Nonpositives"` | R₋^{dimension} | {"head": "Nonpositives", "dimension": 3} |
+| `"Nonnegatives"` | R₊^{dimension} | {"head": "Nonnegatives", "dimension": 3} |
+| `"RootDetConeTriangle"` |  |  |
+| `"RootDetConeSquare"` |  |  |
+| `"LogDetConeTriangle"` |  |  |
+| `"LogDetConeSquare"` |  |  |
+| `"PositiveSemidefiniteConeTriangle"` |  |  |
+| `"PositiveSemidefiniteConeSquare"` |  |  |
+| `"PowerCone"` | [x, y, z] ∈ {R³: x^{exponent} y^{1-exponent} ≥ \|z\|; x, y ≥ 0} | {"head": "PowerCone", "exponent": 2.0} |
+| `"DualPowerCone"` | [u, v, w] ∈ {R³: (u / exponent)^{exponent} (v / (1-exponent))^{1-exponent} ≥ \|w\|; u, v ≥ 0} | {"head": "DualPowerCone", "exponent": 2.0} |
 
 ## An example
 
