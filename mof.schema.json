@@ -432,11 +432,11 @@
                     }
                 }
             }, {
-                "description": "Interval: the set `[lower, upper]`\nSemiinteger: the set `{0} ∪ {lower, lower + 1, ..., upper}`\nSemicontinuous: the set `{0} ∪ [lower, upper]`.",
+                "description": "The set `[lower, upper]`.",
                 "required": ["lower", "upper"],
                 "properties": {
                     "head": {
-                        "enum": ["Interval", "Semiinteger", "Semicontinuous"]
+                        "const": "Interval"
                     },
                     "lower": {
                         "type": "number"
@@ -446,10 +446,45 @@
                     }
                 }
             }, {
-                "description": "ZeroOne: the set `{0, 1}`\nInteger: the set `ℤ`.",
+                "description": "The set `{0} ∪ {lower, lower + 1, ..., upper}`.",
+                "required": ["lower", "upper"],
                 "properties": {
                     "head": {
-                        "enum": ["ZeroOne", "Integer"]
+                        "const": "Semiinteger"
+                    },
+                    "lower": {
+                        "type": "number"
+                    },
+                    "upper": {
+                        "type": "number"
+                    }
+                }
+            }, {
+                "description": "The set `{0} ∪ [lower, upper]`.",
+                "required": ["lower", "upper"],
+                "properties": {
+                    "head": {
+                        "const": "Semicontinuous"
+                    },
+                    "lower": {
+                        "type": "number"
+                    },
+                    "upper": {
+                        "type": "number"
+                    }
+                }
+            }, {
+                "description": "The set `{0, 1}`.",
+                "properties": {
+                    "head": {
+                        "const": "ZeroOne"
+                    }
+                }
+            }, {
+                "description": "The set `ℤ`.",
+                "properties": {
+                    "head": {
+                        "const": "Integer"
                     }
                 }
             }]
@@ -459,17 +494,25 @@
             "type": "object",
             "required": ["head"],
             "oneOf": [{
-                "description": "ExponentialCone: the cone `[x, y, z] ∈ {R³: y * exp(x / y) ≤ z, y ≥ 0}`\nDualExponentialCone: the cone `[u, v, w] ∈ {R³: -u * exp(v / u) ≤ exp(1) * w, u < 0}`.",
+                "description": "The cone `[x, y, z] ∈ {R³: y * exp(x / y) ≤ z, y ≥ 0}`.",
                 "properties": {
                     "head": {
-                        "enum": ["ExponentialCone", "DualExponentialCone"]
+                        "const": "ExponentialCone"
                     }
                 }
             }, {
+                "description": "The cone `[u, v, w] ∈ {R³: -u * exp(v / u) ≤ exp(1) * w, u < 0}`.",
+                "properties": {
+                    "head": {
+                        "const": "DualExponentialCone"
+                    }
+                }
+            }, {
+                "description": "A special ordered set of type I.",
                 "required": ["weights"],
                 "properties": {
                     "head": {
-                        "enum": ["SOS1", "SOS2"]
+                        "const": "SOS1"
                     },
                     "weights": {
                         "type": "array",
@@ -479,15 +522,97 @@
                     }
                 }
             }, {
-                "description": "Zeros: the set `{0}^{dimension}`\nReals: the set `R^{dimension}`\nNonpositives: the set `R-^{dimension}`\nNonnegatives: the set `R+^{dimension}`\nSecondOrderCone: the cone `[t, x] ∈ {R^{dimension} : t ≥ ||x||₂`\nRotatedSecondOrderCone: the cone `[t, u, x] ∈ {R^{dimension} : 2tu ≥ (||x||₂)²; t, u ≥ 0}\nGeometricMeanCone: the cone `[t, x] ∈ {R^{dimension}: t ≤ (Πxᵢ)^{1 / (dimension-1)}}`.",
+                "description": "A special ordered set of type II.",
+                "required": ["weights"],
+                "properties": {
+                    "head": {
+                        "const": "SOS2"
+                    },
+                    "weights": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }, {
+                "description": "The cone `[t, x] ∈ {R^{dimension}: t ≤ (Πxᵢ)^{1 / (dimension-1)}}`.",
                 "required": ["dimension"],
                 "properties": {
                     "head": {
-                        "enum": [
-                            "Zeros", "Reals", "Nonpositives", "Nonnegatives",
-                            "SecondOrderCone", "RotatedSecondOrderCone",
-                            "GeometricMeanCone"
-                        ]
+                        "const": "GeometricMeanCone"
+                    },
+                    "dimension": {
+                        "type": "integer",
+                        "minimum": 1
+                    }
+                }
+            }, {
+                "description": "The cone `[t, x] ∈ {R^{dimension} : t ≥ ||x||₂.",
+                "required": ["dimension"],
+                "properties": {
+                    "head": {
+                        "const": "SecondOrderCone"
+                    },
+                    "dimension": {
+                        "type": "integer",
+                        "minimum": 1
+                    }
+                }
+            }, {
+                "description": "The cone `[t, u, x] ∈ {R^{dimension} : 2tu ≥ (||x||₂)²; t, u ≥ 0}.",
+                "required": ["dimension"],
+                "properties": {
+                    "head": {
+                        "const": "RotatedSecondOrderCone"
+                    },
+                    "dimension": {
+                        "type": "integer",
+                        "minimum": 1
+                    }
+                }
+            }, {
+                "description": "The set `{0}^{dimension}`.",
+                "required": ["dimension"],
+                "properties": {
+                    "head": {
+                        "const": "Zeros"
+                    },
+                    "dimension": {
+                        "type": "integer",
+                        "minimum": 1
+                    }
+                }
+            }, {
+                "description": "The set `R^{dimension}`.",
+                "required": ["dimension"],
+                "properties": {
+                    "head": {
+                        "const": "Reals"
+                    },
+                    "dimension": {
+                        "type": "integer",
+                        "minimum": 1
+                    }
+                }
+            }, {
+                "description": "The set `R₋^{dimension}`.",
+                "required": ["dimension"],
+                "properties": {
+                    "head": {
+                        "const": "Nonpositives"
+                    },
+                    "dimension": {
+                        "type": "integer",
+                        "minimum": 1
+                    }
+                }
+            }, {
+                "description": "The set `R₊^{dimension}`.",
+                "required": ["dimension"],
+                "properties": {
+                    "head": {
+                        "const": "Nonnegatives"
                     },
                     "dimension": {
                         "type": "integer",
@@ -511,11 +636,22 @@
                     }
                 }
             }, {
-                "description": "PowerCone: the cone `[x, y, z] ∈ {R³: x^{exponent} y^{1-exponent} ≥ |z|; x, y ≥ 0}`\nDualPowerCone: the cone `[u, v, w] ∈ {R³: (u / exponent)^{exponent} (v / (1-exponent))^{1-exponent} ≥ |w|; u, v ≥ 0}`.",
+                "description": "The cone `[x, y, z] ∈ {R³: x^{exponent} y^{1-exponent} ≥ |z|; x, y ≥ 0}`.",
                 "required": ["exponent"],
                 "properties": {
                     "head": {
-                        "enum": ["PowerCone", "DualPowerCone"]
+                        "const": "PowerCone"
+                    },
+                    "exponent": {
+                        "type": "number"
+                    }
+                }
+            }, {
+                "description": "The cone `[u, v, w] ∈ {R³: (u / exponent)^{exponent} (v / (1-exponent))^{1-exponent} ≥ |w|; u, v ≥ 0}`.",
+                "required": ["exponent"],
+                "properties": {
+                    "head": {
+                        "const": "DualPowerCone"
                     },
                     "exponent": {
                         "type": "number"
