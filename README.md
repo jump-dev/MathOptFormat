@@ -182,6 +182,110 @@ Here is a summary of the functions defined by MathOptFormat.
 | `"VectorAffineFunction"` | The function `Ax + b`, where `A` is a sparse matrix specified by a list of `VectorAffineTerm`s in `terms` and `b` is a dense vector specified by `constants`. | {"head": "VectorAffineFunction", "constants": [1.0], "terms": [{"output_index": 1, "scalar_term": {"coefficient": 2.5, "variable": "x"}}]} |
 | `"VectorQuadraticFunction"` | The vector-valued quadratic function `q(x) + Ax + b`, where `q(x)` is specified by a list of `VectorQuadraticTerm`s in `quadratic_terms`, `A` is a sparse matrix specified by a list of `VectorAffineTerm`s in `affine_terms` and `b` is a dense vector specified by `constants`. |  |
 
+#### Nonlinear functions
+
+Nonlinear functions are encoded in MathOptFormat by an expression graph. Each
+expression graphs is stored in Polish prefix notation. For example, the
+nonlinear expression `sin²(x)` is expressed as `^(sin(x), 2)`.
+
+The expression graph is stored as an object with three required fields:
+`"head"`, which must be `"Nonlinear"`, as well as `"root"` and `"node_list"`.
+
+`"root"` contains an object defining the root node of the expression graph. All
+other nodes are stored as a flattened list in the `"node\_list"` field. We
+elaborate on permissible nodes and how to store them in the following
+subsections.
+
+##### Leaf nodes
+
+Leaf nodes in the expression graph are data: they can either reference
+optimization variables, or be real or complex valued numeric constants. They are
+described as follows.
+
+| Head | Description | Example |
+| ---- | ----------- | ------- |
+| `"real"` | A real-valued numeric constant | {"head": "real", "value": 1.0} |
+| `"complex"` | A complex-valued numeric constant | {"head": "complex", "real": 1.0, "imag": 2.0} |
+| `"variable"` | A reference to an optimization variable | {"head": "variable", "name": "x"} |
+
+Nodes in the flattened list `"node_list"` can be referenced by an object with
+the `"head"` field `"node"` and a field `"index"` that is the one-based index of
+the node in `"node_list"`.
+
+| Head | Description | Example |
+| ---- | ----------- | ------- |
+| `"node"` | A pointer to a (1-indexed) element in the `node_list` field in a nonlinear function | {"head": "node", "index": 2} |
+
+##### Other nodes
+
+| Name | Arity |
+| `"log"` | Unary |
+| `"log10"` | Unary |
+| `"exp"` | Unary |
+| `"sqrt"` | Unary |
+| `"floor"` | Unary |
+| `"ceil"` | Unary |
+| `"abs"` | Unary |
+| `"cos"` | Unary |
+| `"sin"` | Unary |
+| `"tan"` | Unary |
+| `"acos"` | Unary |
+| `"asin"` | Unary |
+| `"atan"` | Unary |
+| `"cosh"` | Unary |
+| `"sinh"` | Unary |
+| `"tanh"` | Unary |
+| `"acosh"` | Unary |
+| `"asinh"` | Unary |
+| `"atanh"` | Unary |
+| `"/"` | Binary |
+| `"^"` | Binary |
+| `"+"` | N-ary |
+| `"-"` | N-ary |
+| `"*"` | N-ary |
+| `"min"` | N-ary |
+| `"max"` | N-ary |
+
+##### Example
+
+As an example, consider the function `f(x, y) = (1 + 3i) ⋅ x + sin^2(x) + y`.
+In Polish notation, the expression graph is:
+```f(x, y) = +(1 + 3i, ^(sin(x), 2), y)
+```
+In MathOptFormat, this expression graph can be encoded as follows:
+```json
+{
+    "head": "Nonlinear",
+    "root": {
+        "head": "+",
+        "args": [
+            {"head": "node", "index": 1},
+            {"head": "node", "index": 3},
+            {"head": "variable", "name": "y"}
+        ]
+    },
+    "node_list": [
+        {
+            "head": "*", "args": [
+                {"head": "complex", "real": 1, "imag": 3},
+                {"head": "variable", "name": "x"}
+            ]
+        }, {
+            "head": "sin",
+            "args": [
+                {"head": "variable", "name": "x"}
+            ]
+        }, {
+            "head": "^",
+            "args": [
+                {"head": "node", "index": 2},
+                {"head": "real", "value": 2}
+            ]
+        }
+    ]
+}
+```
+
 ### List of supported sets
 
 The list of sets supported by MathOptFormat are contained in the

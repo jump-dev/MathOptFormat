@@ -154,7 +154,7 @@
             "type": "object",
             "required": ["head"],
             "oneOf": [{
-                "description": "Unary operators.",
+                "description": "Unary operators",
                 "required": ["args"],
                 "properties": {
                     "head": {
@@ -174,7 +174,7 @@
                     }
                 }
             }, {
-                "description": "Binary operators.",
+                "description": "Binary operators",
                 "required": ["args"],
                 "properties": {
                     "head": {
@@ -190,7 +190,7 @@
                     }
                 }
             }, {
-                "description": "N-ary operators.",
+                "description": "N-ary operators",
                 "required": ["args"],
                 "properties": {
                     "head": {
@@ -205,7 +205,8 @@
                     }
                 }
             }, {
-                "description": "A real-valued numeric constant.",
+                "description": "A real-valued numeric constant",
+                "example": "{\"head\": \"real\", \"value\": 1.0}",
                 "required": ["value"],
                 "properties": {
                     "head": {
@@ -216,7 +217,8 @@
                     }
                 }
             }, {
-                "description": "A complex-valued numeric constant.",
+                "description": "A complex-valued numeric constant",
+                "example": "{\"head\": \"complex\", \"real\": 1.0, \"imag\": 2.0}",
                 "required": ["real", "imag"],
                 "properties": {
                     "head": {
@@ -231,6 +233,7 @@
                 }
             }, {
                 "description": "A reference to an optimization variable",
+                "example": "{\"head\": \"variable\", \"name\": \"x\"}",
                 "required": ["name"],
                 "properties": {
                     "head": {
@@ -242,6 +245,7 @@
                 }
             }, {
                 "description": "A pointer to a (1-indexed) element in the `node_list` field in a nonlinear function",
+                "example": "{\"head\": \"node\", \"index\": 2}",
                 "required": ["index"],
                 "properties": {
                     "head": {

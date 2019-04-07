@@ -128,7 +128,8 @@ func generateDocs(jsonSchemaFilename string) (string, string, error) {
 		"",
 		processStrings("Vector Functions", data, "vector_functions")}, "\n")
 
-	return setSummary, functionSummary, nil
+	nlSummary := processNonlinear(data)
+	return setSummary, functionSummary + nlSummary, nil
 }
 
 func processStrings(title string, data map[string]interface{}, key string) string {
@@ -147,4 +148,52 @@ func processStrings(title string, data map[string]interface{}, key string) strin
 		}
 	}
 	return strings.Join(setStrings, "\n")
+}
+
+func processNonlinear(data map[string]interface{}) string {
+	definitions := data["definitions"].(map[string]interface{})
+	nonlinearTerm := definitions["NonlinearTerm"].(map[string]interface{})
+	functionStrings := []string{
+		"##### Functions",
+		"",
+		"| Name | Arity |"}
+
+	leafStrings := []string{
+		"#### Nonlinear functions",
+		"",
+		"##### Leaf nodes",
+		"| Name | Description | Example |",
+		"| ---- | ----------- | ------- |"}
+
+	for _, setData := range nonlinearTerm["oneOf"].([]interface{}) {
+		object := setData.(map[string]interface{})
+		objects := processOneOf(object)
+
+		switch object["description"] {
+		case "Unary operators":
+			for _, f := range objects {
+				functionStrings = append(functionStrings,
+					fmt.Sprintf("| `\"%s\"` | Unary |", f.Head))
+			}
+		case "Binary operators":
+			for _, f := range objects {
+				functionStrings = append(functionStrings,
+					fmt.Sprintf("| `\"%s\"` | Binary |", f.Head))
+			}
+		case "N-ary operators":
+			for _, f := range objects {
+				functionStrings = append(functionStrings,
+					fmt.Sprintf("| `\"%s\"` | N-ary |", f.Head))
+			}
+		default:
+			if len(objects) == 1 {
+				leafStrings = append(leafStrings,
+					fmt.Sprintf("| `\"%s\"` | %s | %s |", objects[0].Head, objects[0].Description, objects[0].Example))
+			} else {
+				fmt.Println("Unsupported object: %s", object)
+			}
+		}
+	}
+	return "\n" + strings.Join(leafStrings, "\n") + "\n\n" +
+		strings.Join(functionStrings, "\n")
 }
