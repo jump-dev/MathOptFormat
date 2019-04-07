@@ -186,7 +186,53 @@ For more information on `"Nonlinear"` functions, see
 | `"VectorAffineFunction"` | The function `Ax + b`, where `A` is a sparse matrix specified by a list of `VectorAffineTerm`s in `terms` and `b` is a dense vector specified by `constants`. | {"head": "VectorAffineFunction", "constants": [1.0], "terms": [{"output_index": 1, "scalar_term": {"coefficient": 2.5, "variable": "x"}}]} |
 | `"VectorQuadraticFunction"` | The vector-valued quadratic function `q(x) + Ax + b`, where `q(x)` is specified by a list of `VectorQuadraticTerm`s in `quadratic_terms`, `A` is a sparse matrix specified by a list of `VectorAffineTerm`s in `affine_terms` and `b` is a dense vector specified by `constants`. |  |
 
-#### Nonlinear functions
+### List of supported sets
+
+The list of sets supported by MathOptFormat are contained in the
+`#/definitions/scalar_sets` and `#/definitions/vector_sets` fields of the
+schema. Scalar sets are sets for which `Mj=1`, while vector sets are sets for
+which `Mj≥1`.
+
+Here is a summary of the sets defined by MathOptFormat.
+
+#### Scalar Sets
+
+| Name | Description | Example |
+| ---- | ----------- | ------- |
+| `"LessThan"` | (-∞, upper] | {"head": "LessThan", "upper": 2.1} |
+| `"GreaterThan"` | [lower, ∞) | {"head": "GreaterThan", "lower": 2.1} |
+| `"EqualTo"` | {value} | {"head": "EqualTo", "value": 2.1} |
+| `"Interval"` | [lower, upper] | {"head": "Interval", "lower": 2.1, "upper": 3.4} |
+| `"Semiinteger"` | {0} ∪ {lower, lower + 1, ..., upper} | {"head": "Semiinteger", "lower": 2, "upper": 4} |
+| `"Semicontinuous"` | {0} ∪ [lower, upper] | {"head": "Semicontinuous", "lower": 2.1, "upper": 3.4} |
+| `"ZeroOne"` | {0, 1} | {"head": "ZeroOne"} |
+| `"Integer"` | ℤ | {"head": "Integer"} |
+
+#### Vector Sets
+
+| Name | Description | Example |
+| ---- | ----------- | ------- |
+| `"ExponentialCone"` | [x, y, z] ∈ {R³: y * exp(x / y) ≤ z, y ≥ 0} | {"head": "ExponentialCone"} |
+| `"DualExponentialCone"` | [u, v, w] ∈ {R³: -u * exp(v / u) ≤ exp(1) * w, u < 0} | {"head": "DualExponentialCone"} |
+| `"SOS1"` | A special ordered set of type I. | {"head": "SOS1", "weights": [1, 3, 2]} |
+| `"SOS2"` | A special ordered set of type II. | {"head": "SOS2", "weights": [1, 3, 2]} |
+| `"GeometricMeanCone"` | [t, x] ∈ {R^{dimension}: t ≤ (Πxᵢ)^{1 / (dimension-1)}} | {"head": "GeometricMeanCone", "dimension": 3} |
+| `"SecondOrderCone"` | [t, x] ∈ {R^{dimension} : t ≥ \|\|x\|\|₂ | {"head": "SecondOrderCone", "dimension": 3} |
+| `"RotatedSecondOrderCone"` | [t, u, x] ∈ {R^{dimension} : 2tu ≥ (\|\|x\|\|₂)²; t, u ≥ 0} | {"head": "RotatedSecondOrderCone", "dimension": 3} |
+| `"Zeros"` | {0}^{dimension} | {"head": "Zeros", "dimension": 3} |
+| `"Reals"` | R^{dimension} | {"head": "Reals", "dimension": 3} |
+| `"Nonpositives"` | R₋^{dimension} | {"head": "Nonpositives", "dimension": 3} |
+| `"Nonnegatives"` | R₊^{dimension} | {"head": "Nonnegatives", "dimension": 3} |
+| `"RootDetConeTriangle"` |  |  |
+| `"RootDetConeSquare"` |  |  |
+| `"LogDetConeTriangle"` |  |  |
+| `"LogDetConeSquare"` |  |  |
+| `"PositiveSemidefiniteConeTriangle"` |  |  |
+| `"PositiveSemidefiniteConeSquare"` |  |  |
+| `"PowerCone"` | [x, y, z] ∈ {R³: x^{exponent} y^{1-exponent} ≥ \|z\|; x, y ≥ 0} | {"head": "PowerCone", "exponent": 2.0} |
+| `"DualPowerCone"` | [u, v, w] ∈ {R³: (u / exponent)^{exponent} (v / (1-exponent))^{1-exponent} ≥ \|w\|; u, v ≥ 0} | {"head": "DualPowerCone", "exponent": 2.0} |
+
+### Nonlinear functions
 
 Nonlinear functions are encoded in MathOptFormat by an expression graph. Each
 expression graphs is stored in Polish prefix notation. For example, the
@@ -200,7 +246,7 @@ other nodes are stored as a flattened list in the `"node_list"` field. We
 elaborate on permissible nodes and how to store them in the following
 subsections.
 
-##### Leaf nodes
+#### Leaf nodes
 
 Leaf nodes in the expression graph are data: they can either reference
 optimization variables, or be real or complex valued numeric constants. They are
@@ -220,7 +266,7 @@ the node in `"node_list"`.
 | ---- | ----------- | ------- |
 | `"node"` | A pointer to a (1-indexed) element in the `node_list` field in a nonlinear function | {"head": "node", "index": 2} |
 
-##### Operators
+#### Operators
 
 All nonlinear operators in MathOptFormat are described by a JSON object with two fields:
 
@@ -301,12 +347,12 @@ and their corresponding arity.
 | `"min"` | N-ary |
 | `"max"` | N-ary |
 
-##### Example
+#### Example
 
-As an example, consider the function `f(x, y) = (1 + 3i) ⋅ x + sin^2(x) + y`.
+As an example, consider the function `f(x, y) = (1 + 3i) * x + sin^2(x) + y`.
 
 In Polish notation, the expression graph is:
-`f(x, y) = +(1 + 3i, ^(sin(x), 2), y)`.
+`f(x, y) = +(*(1 + 3i, x), ^(sin(x), 2), y)`.
 
 In MathOptFormat, this expression graph can be encoded as follows:
 ```json
@@ -341,52 +387,6 @@ In MathOptFormat, this expression graph can be encoded as follows:
     ]
 }
 ```
-
-### List of supported sets
-
-The list of sets supported by MathOptFormat are contained in the
-`#/definitions/scalar_sets` and `#/definitions/vector_sets` fields of the
-schema. Scalar sets are sets for which `Mj=1`, while vector sets are sets for
-which `Mj≥1`.
-
-Here is a summary of the sets defined by MathOptFormat.
-
-#### Scalar Sets
-
-| Name | Description | Example |
-| ---- | ----------- | ------- |
-| `"LessThan"` | (-∞, upper] | {"head": "LessThan", "upper": 2.1} |
-| `"GreaterThan"` | [lower, ∞) | {"head": "GreaterThan", "lower": 2.1} |
-| `"EqualTo"` | {value} | {"head": "EqualTo", "value": 2.1} |
-| `"Interval"` | [lower, upper] | {"head": "Interval", "lower": 2.1, "upper": 3.4} |
-| `"Semiinteger"` | {0} ∪ {lower, lower + 1, ..., upper} | {"head": "Semiinteger", "lower": 2, "upper": 4} |
-| `"Semicontinuous"` | {0} ∪ [lower, upper] | {"head": "Semicontinuous", "lower": 2.1, "upper": 3.4} |
-| `"ZeroOne"` | {0, 1} | {"head": "ZeroOne"} |
-| `"Integer"` | ℤ | {"head": "Integer"} |
-
-#### Vector Sets
-
-| Name | Description | Example |
-| ---- | ----------- | ------- |
-| `"ExponentialCone"` | [x, y, z] ∈ {R³: y * exp(x / y) ≤ z, y ≥ 0} | {"head": "ExponentialCone"} |
-| `"DualExponentialCone"` | [u, v, w] ∈ {R³: -u * exp(v / u) ≤ exp(1) * w, u < 0} | {"head": "DualExponentialCone"} |
-| `"SOS1"` | A special ordered set of type I. | {"head": "SOS1", "weights": [1, 3, 2]} |
-| `"SOS2"` | A special ordered set of type II. | {"head": "SOS2", "weights": [1, 3, 2]} |
-| `"GeometricMeanCone"` | [t, x] ∈ {R^{dimension}: t ≤ (Πxᵢ)^{1 / (dimension-1)}} | {"head": "GeometricMeanCone", "dimension": 3} |
-| `"SecondOrderCone"` | [t, x] ∈ {R^{dimension} : t ≥ \|\|x\|\|₂ | {"head": "SecondOrderCone", "dimension": 3} |
-| `"RotatedSecondOrderCone"` | [t, u, x] ∈ {R^{dimension} : 2tu ≥ (\|\|x\|\|₂)²; t, u ≥ 0} | {"head": "RotatedSecondOrderCone", "dimension": 3} |
-| `"Zeros"` | {0}^{dimension} | {"head": "Zeros", "dimension": 3} |
-| `"Reals"` | R^{dimension} | {"head": "Reals", "dimension": 3} |
-| `"Nonpositives"` | R₋^{dimension} | {"head": "Nonpositives", "dimension": 3} |
-| `"Nonnegatives"` | R₊^{dimension} | {"head": "Nonnegatives", "dimension": 3} |
-| `"RootDetConeTriangle"` |  |  |
-| `"RootDetConeSquare"` |  |  |
-| `"LogDetConeTriangle"` |  |  |
-| `"LogDetConeSquare"` |  |  |
-| `"PositiveSemidefiniteConeTriangle"` |  |  |
-| `"PositiveSemidefiniteConeSquare"` |  |  |
-| `"PowerCone"` | [x, y, z] ∈ {R³: x^{exponent} y^{1-exponent} ≥ \|z\|; x, y ≥ 0} | {"head": "PowerCone", "exponent": 2.0} |
-| `"DualPowerCone"` | [u, v, w] ∈ {R³: (u / exponent)^{exponent} (v / (1-exponent))^{1-exponent} ≥ \|w\|; u, v ≥ 0} | {"head": "DualPowerCone", "exponent": 2.0} |
 
 ## Implementations
 
