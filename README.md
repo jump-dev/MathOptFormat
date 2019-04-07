@@ -219,6 +219,7 @@ the node in `"node_list"`.
 ##### Other nodes
 
 | Name | Arity |
+| ---- | ----- |
 | `"log"` | Unary |
 | `"log10"` | Unary |
 | `"exp"` | Unary |

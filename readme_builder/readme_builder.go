@@ -156,7 +156,8 @@ func processNonlinear(data map[string]interface{}) string {
 	functionStrings := []string{
 		"##### Functions",
 		"",
-		"| Name | Arity |"}
+		"| Name | Arity |",
+	    "| ---- | ----- |"}
 
 	leafStrings := []string{
 		"#### Nonlinear functions",
