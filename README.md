@@ -174,6 +174,10 @@ Here is a summary of the functions defined by MathOptFormat.
 | `"ScalarQuadraticFunction"` | The function `0.5x'Qx + a'x + b`, where `a` is a sparse vector of `ScalarAffineTerm`s in `affine_terms`, `b` is the scalar `constant`, and `Q` is a symmetric matrix specified by a list of `ScalarQuadraticTerm`s in `quadratic_terms`. Duplicate indices in `affine_terms` and `quadratic` are accepted, and the corresponding coefficients are summed together. Mirrored indices in `quadratic_terms` (i.e., `(i,j)` and `(j, i)`) are considered duplicates; only one need to be specified. | {"head": "ScalarAffineFunction", "constant": 1.0, "affine_terms": [{"coefficient": 2.5, "variable": "x"}], "quadratic_terms": [{"coefficient": 2.0, "variable_1": "x", "variable_2": "y"}]} |
 | `"Nonlinear"` | An expression graph representing a scalar function. |  |
 
+
+For more information on `"Nonlinear"` functions, see
+[Nonlinear functions](@ref).
+
 #### Vector Functions
 
 | Name | Description | Example |
@@ -192,7 +196,7 @@ The expression graph is stored as an object with three required fields:
 `"head"`, which must be `"Nonlinear"`, as well as `"root"` and `"node_list"`.
 
 `"root"` contains an object defining the root node of the expression graph. All
-other nodes are stored as a flattened list in the `"node\_list"` field. We
+other nodes are stored as a flattened list in the `"node_list"` field. We
 elaborate on permissible nodes and how to store them in the following
 subsections.
 
@@ -216,7 +220,57 @@ the node in `"node_list"`.
 | ---- | ----------- | ------- |
 | `"node"` | A pointer to a (1-indexed) element in the `node_list` field in a nonlinear function | {"head": "node", "index": 2} |
 
-##### Other nodes
+##### Operators
+
+All nonlinear operators in MathOptFormat are described by a JSON object with two fields:
+
+ - `"head"`
+
+   A string that corresponds to the operator.
+
+ - `"args"`
+
+   An ordered list of nodes that are passed as arguments to the operator.
+
+The number of elements in `"args"` depends on the arity of the operator. MathOptFormat distinguishes between three arities:
+
+ - Unary operators take one argument
+ - Binary operators take two arguments
+ - N-ary operators take at least one argument
+
+To give some examples, the unary function `log(x)` is encoded as:
+```json
+{
+  "head": "log",
+  "args": [
+    {"head": "variable", "name": "x"}
+  ]
+}
+```
+The binary function `x^2` (i.e., `^(x, 2)`) is encoded as:
+```json
+{
+  "head": "^",
+  "args": [
+    {"head": "variable", "name": "x"},
+    {"head": "real", "value": 2},
+  ]
+}
+```
+The n-ary function `x + y + 1` (i.e., `+(x, y, 1)`) is encoded as:
+```json
+{
+  "head": "+",
+  "args": [
+    {"head": "variable", "name": "x"},
+    {"head": "variable", "name": "y"},
+    {"head": "real", "value": 1},
+  ]
+}
+```
+
+Here is a complete list of the nonlinear operators supported by MathOptFormat
+and their corresponding arity.
 
 | Name | Arity |
 | ---- | ----- |
@@ -250,9 +304,10 @@ the node in `"node_list"`.
 ##### Example
 
 As an example, consider the function `f(x, y) = (1 + 3i) ⋅ x + sin^2(x) + y`.
+
 In Polish notation, the expression graph is:
-```f(x, y) = +(1 + 3i, ^(sin(x), 2), y)
-```
+`f(x, y) = +(1 + 3i, ^(sin(x), 2), y)`.
+
 In MathOptFormat, this expression graph can be encoded as follows:
 ```json
 {
