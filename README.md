@@ -172,10 +172,10 @@ Here is a summary of the functions defined by MathOptFormat.
 | `"SingleVariable"` | The scalar variable `variable`. | {"head": "SingleVariable", "variable": "x"} |
 | `"ScalarAffineFunction"` | The function `a'x + b`, where `a` is a sparse vector specified by a list of `ScalarAffineTerm`s in `terms` and `b` is the scalar in `constant`. Duplicate variables in `terms` are accepted, and the corresponding coefficients are summed together. | {"head": "ScalarAffineFunction", "constant": 1.0, "terms": [{"coefficient": 2.5, "variable": "x"}]} |
 | `"ScalarQuadraticFunction"` | The function `0.5x'Qx + a'x + b`, where `a` is a sparse vector of `ScalarAffineTerm`s in `affine_terms`, `b` is the scalar `constant`, and `Q` is a symmetric matrix specified by a list of `ScalarQuadraticTerm`s in `quadratic_terms`. Duplicate indices in `affine_terms` and `quadratic` are accepted, and the corresponding coefficients are summed together. Mirrored indices in `quadratic_terms` (i.e., `(i,j)` and `(j, i)`) are considered duplicates; only one need to be specified. | {"head": "ScalarAffineFunction", "constant": 1.0, "affine_terms": [{"coefficient": 2.5, "variable": "x"}], "quadratic_terms": [{"coefficient": 2.0, "variable_1": "x", "variable_2": "y"}]} |
-| `"Nonlinear"` | An expression graph representing a scalar function. |  |
+| `"ScalarNonlinearFunction"` | An expression graph representing a scalar nonlinear function. |  |
 
 
-For more information on `"Nonlinear"` functions, see
+For more information on `"ScalarNonlinearFunction"` functions, see
 [Nonlinear functions](@ref).
 
 #### Vector Functions
@@ -239,7 +239,8 @@ expression graphs is stored in Polish prefix notation. For example, the
 nonlinear expression `sin²(x)` is expressed as `^(sin(x), 2)`.
 
 The expression graph is stored as an object with three required fields:
-`"head"`, which must be `"Nonlinear"`, as well as `"root"` and `"node_list"`.
+`"head"`, which must be `"ScalarNonlinearFunction"`, as well as `"root"` and
+`"node_list"`.
 
 `"root"` contains an object defining the root node of the expression graph. All
 other nodes are stored as a flattened list in the `"node_list"` field. We
@@ -357,7 +358,7 @@ In Polish notation, the expression graph is:
 In MathOptFormat, this expression graph can be encoded as follows:
 ```json
 {
-    "head": "Nonlinear",
+    "head": "ScalarNonlinearFunction",
     "root": {
         "head": "+",
         "args": [

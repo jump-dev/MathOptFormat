@@ -9,7 +9,7 @@
     "objectives": [{
         "sense": "min",
         "function": {
-            "head": "Nonlinear",
+            "head": "ScalarNonlinearFunction",
             "root": {
                 "head": "node",
                 "index": 4

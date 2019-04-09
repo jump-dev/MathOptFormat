@@ -317,11 +317,11 @@
                     }
                 }
             }, {
-                "description": "An expression graph representing a scalar function.",
+                "description": "An expression graph representing a scalar nonlinear function.",
                 "required": ["root", "node_list"],
                 "properties": {
                     "head": {
-                        "const": "Nonlinear"
+                        "const": "ScalarNonlinearFunction"
                     },
                     "root": {
                         "$ref": "#/definitions/NonlinearTerm"
