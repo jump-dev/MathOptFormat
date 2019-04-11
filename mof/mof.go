@@ -4,10 +4,10 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/qri-io/jsonschema"
 	"io/ioutil"
 	"os"
 	"strings"
-	"github.com/qri-io/jsonschema"
 )
 
 //go:generate go run generate-static-schema.go ../mof.schema.json
@@ -88,8 +88,7 @@ func SummarizeSchema() (string, error) {
 		return "", err
 	}
 	operators, leaves := summarizeNonlinear(data)
-	summary :=
-		"## Sets\n\n" +
+	summary := "## Sets\n\n" +
 		"### Scalar Sets\n\n" +
 		summarize(data, "scalar_sets") + "\n" +
 		"### Vector Sets\n\n" +
@@ -145,8 +144,7 @@ func oneOfToObject(data map[string]interface{}) []Object {
 }
 
 func summarize(data map[string]interface{}, key string) string {
-	summary :=
-		"| Name | Description | Example |\n" +
+	summary := "| Name | Description | Example |\n" +
 		"| ---- | ----------- | ------- |\n"
 	definitions := data["definitions"].(map[string]interface{})
 	keyData := definitions[key].(map[string]interface{})
@@ -162,14 +160,10 @@ func summarize(data map[string]interface{}, key string) string {
 func summarizeNonlinear(data map[string]interface{}) (string, string) {
 	definitions := data["definitions"].(map[string]interface{})
 	nonlinearTerm := definitions["NonlinearTerm"].(map[string]interface{})
-	operators :=
-		"| Name | Arity |\n" +
+	operators := "| Name | Arity |\n" +
 		"| ---- | ----- |\n"
-
-	leaves :=
-		"| Name | Description | Example |\n" +
+	leaves := "| Name | Description | Example |\n" +
 		"| ---- | ----------- | ------- |\n"
-
 	for _, term := range nonlinearTerm["oneOf"].([]interface{}) {
 		oneOf := term.(map[string]interface{})
 		objects := oneOfToObject(oneOf)

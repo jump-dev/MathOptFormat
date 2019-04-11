@@ -12,7 +12,7 @@ func TestExamples(t *testing.T) {
 	}
 	for _, file := range files {
 		if err := ValidateFile("../examples/" + file.Name()); err != nil {
-			 t.Errorf("%s failed to validate", file.Name())
+			t.Errorf("%s failed to validate", file.Name())
 		}
 	}
 }
