@@ -206,7 +206,7 @@
                 }
             }, {
                 "description": "A real-valued numeric constant",
-                "example": "{\"head\": \"real\", \"value\": 1.0}",
+                "examples": ["{\"head\": \"real\", \"value\": 1.0}"],
                 "required": ["value"],
                 "properties": {
                     "head": {
@@ -218,7 +218,7 @@
                 }
             }, {
                 "description": "A complex-valued numeric constant",
-                "example": "{\"head\": \"complex\", \"real\": 1.0, \"imag\": 2.0}",
+                "examples": ["{\"head\": \"complex\", \"real\": 1.0, \"imag\": 2.0}"],
                 "required": ["real", "imag"],
                 "properties": {
                     "head": {
@@ -233,7 +233,7 @@
                 }
             }, {
                 "description": "A reference to an optimization variable",
-                "example": "{\"head\": \"variable\", \"name\": \"x\"}",
+                "examples": ["{\"head\": \"variable\", \"name\": \"x\"}"],
                 "required": ["name"],
                 "properties": {
                     "head": {
@@ -245,7 +245,7 @@
                 }
             }, {
                 "description": "A pointer to a (1-indexed) element in the `node_list` field in a nonlinear function",
-                "example": "{\"head\": \"node\", \"index\": 2}",
+                "examples": ["{\"head\": \"node\", \"index\": 2}"],
                 "required": ["index"],
                 "properties": {
                     "head": {
@@ -264,7 +264,7 @@
             "required": ["head"],
             "oneOf": [{
                 "description": "The scalar variable `variable`.",
-                "example": "{\"head\": \"SingleVariable\", \"variable\": \"x\"}",
+                "examples": ["{\"head\": \"SingleVariable\", \"variable\": \"x\"}"],
                 "required": ["variable"],
                 "properties": {
                     "head": {
@@ -276,7 +276,7 @@
                 }
             }, {
                 "description": "The function `a'x + b`, where `a` is a sparse vector specified by a list of `ScalarAffineTerm`s in `terms` and `b` is the scalar in `constant`. Duplicate variables in `terms` are accepted, and the corresponding coefficients are summed together.",
-                "example": "{\"head\": \"ScalarAffineFunction\", \"constant\": 1.0, \"terms\": [{\"coefficient\": 2.5, \"variable\": \"x\"}]}",
+                "examples": ["{\"head\": \"ScalarAffineFunction\", \"constant\": 1.0, \"terms\": [{\"coefficient\": 2.5, \"variable\": \"x\"}]}"],
                 "required": ["constant", "terms"],
                 "properties": {
                     "head": {
@@ -294,7 +294,7 @@
                 }
             }, {
                 "description": "The function `0.5x'Qx + a'x + b`, where `a` is a sparse vector of `ScalarAffineTerm`s in `affine_terms`, `b` is the scalar `constant`, and `Q` is a symmetric matrix specified by a list of `ScalarQuadraticTerm`s in `quadratic_terms`. Duplicate indices in `affine_terms` and `quadratic` are accepted, and the corresponding coefficients are summed together. Mirrored indices in `quadratic_terms` (i.e., `(i,j)` and `(j, i)`) are considered duplicates; only one need to be specified.",
-                "example": "{\"head\": \"ScalarAffineFunction\", \"constant\": 1.0, \"affine_terms\": [{\"coefficient\": 2.5, \"variable\": \"x\"}], \"quadratic_terms\": [{\"coefficient\": 2.0, \"variable_1\": \"x\", \"variable_2\": \"y\"}]}",
+                "examples": ["{\"head\": \"ScalarAffineFunction\", \"constant\": 1.0, \"affine_terms\": [{\"coefficient\": 2.5, \"variable\": \"x\"}], \"quadratic_terms\": [{\"coefficient\": 2.0, \"variable_1\": \"x\", \"variable_2\": \"y\"}]}"],
                 "required": ["constant", "affine_terms", "quadratic_terms"],
                 "properties": {
                     "head": {
@@ -341,7 +341,7 @@
             "required": ["head"],
             "oneOf": [{
                 "description": "An ordered list of variables.",
-                "example": "{\"head\": \"VectorOfVariables\", \"variables\": [\"x\", \"y\"]}",
+                "examples": ["{\"head\": \"VectorOfVariables\", \"variables\": [\"x\", \"y\"]}"],
                 "required": ["variables"],
                 "properties": {
                     "head": {
@@ -356,7 +356,7 @@
                 }
             }, {
                 "description": "The function `Ax + b`, where `A` is a sparse matrix specified by a list of `VectorAffineTerm`s in `terms` and `b` is a dense vector specified by `constants`.",
-                "example": "{\"head\": \"VectorAffineFunction\", \"constants\": [1.0], \"terms\": [{\"output_index\": 1, \"scalar_term\": {\"coefficient\": 2.5, \"variable\": \"x\"}}]}",
+                "examples": ["{\"head\": \"VectorAffineFunction\", \"constants\": [1.0], \"terms\": [{\"output_index\": 1, \"scalar_term\": {\"coefficient\": 2.5, \"variable\": \"x\"}}]}"],
                 "required": ["constants", "terms"],
                 "properties": {
                     "head": {
@@ -409,7 +409,7 @@
             "required": ["head"],
             "oneOf": [{
                 "description": "(-∞, upper]",
-                "example": "{\"head\": \"LessThan\", \"upper\": 2.1}",
+                "examples": ["{\"head\": \"LessThan\", \"upper\": 2.1}"],
                 "required": ["upper"],
                 "properties": {
                     "head": {
@@ -421,7 +421,7 @@
                 }
             }, {
                 "description": "[lower, ∞)",
-                "example": "{\"head\": \"GreaterThan\", \"lower\": 2.1}",
+                "examples": ["{\"head\": \"GreaterThan\", \"lower\": 2.1}"],
                 "required": ["lower"],
                 "properties": {
                     "head": {
@@ -433,7 +433,7 @@
                 }
             }, {
                 "description": "{value}",
-                "example": "{\"head\": \"EqualTo\", \"value\": 2.1}",
+                "examples": ["{\"head\": \"EqualTo\", \"value\": 2.1}"],
                 "required": ["value"],
                 "properties": {
                     "head": {
@@ -445,7 +445,7 @@
                 }
             }, {
                 "description": "[lower, upper]",
-                "example": "{\"head\": \"Interval\", \"lower\": 2.1, \"upper\": 3.4}",
+                "examples": ["{\"head\": \"Interval\", \"lower\": 2.1, \"upper\": 3.4}"],
                 "required": ["lower", "upper"],
                 "properties": {
                     "head": {
@@ -460,7 +460,7 @@
                 }
             }, {
                 "description": "{0} ∪ {lower, lower + 1, ..., upper}",
-                "example": "{\"head\": \"Semiinteger\", \"lower\": 2, \"upper\": 4}",
+                "examples": ["{\"head\": \"Semiinteger\", \"lower\": 2, \"upper\": 4}"],
                 "required": ["lower", "upper"],
                 "properties": {
                     "head": {
@@ -475,7 +475,7 @@
                 }
             }, {
                 "description": "{0} ∪ [lower, upper]",
-                "example": "{\"head\": \"Semicontinuous\", \"lower\": 2.1, \"upper\": 3.4}",
+                "examples": ["{\"head\": \"Semicontinuous\", \"lower\": 2.1, \"upper\": 3.4}"],
                 "required": ["lower", "upper"],
                 "properties": {
                     "head": {
@@ -490,7 +490,7 @@
                 }
             }, {
                 "description": "{0, 1}",
-                "example": "{\"head\": \"ZeroOne\"}",
+                "examples": ["{\"head\": \"ZeroOne\"}"],
                 "properties": {
                     "head": {
                         "const": "ZeroOne"
@@ -498,7 +498,7 @@
                 }
             }, {
                 "description": "ℤ",
-                "example": "{\"head\": \"Integer\"}",
+                "examples": ["{\"head\": \"Integer\"}"],
                 "properties": {
                     "head": {
                         "const": "Integer"
@@ -512,7 +512,7 @@
             "required": ["head"],
             "oneOf": [{
                 "description": "[x, y, z] ∈ {R³: y * exp(x / y) ≤ z, y ≥ 0}",
-                "example": "{\"head\": \"ExponentialCone\"}",
+                "examples": ["{\"head\": \"ExponentialCone\"}"],
                 "properties": {
                     "head": {
                         "const": "ExponentialCone"
@@ -520,7 +520,7 @@
                 }
             }, {
                 "description": "[u, v, w] ∈ {R³: -u * exp(v / u) ≤ exp(1) * w, u < 0}",
-                "example": "{\"head\": \"DualExponentialCone\"}",
+                "examples": ["{\"head\": \"DualExponentialCone\"}"],
                 "properties": {
                     "head": {
                         "const": "DualExponentialCone"
@@ -528,7 +528,7 @@
                 }
             }, {
                 "description": "A special ordered set of type I.",
-                "example": "{\"head\": \"SOS1\", \"weights\": [1, 3, 2]}",
+                "examples": ["{\"head\": \"SOS1\", \"weights\": [1, 3, 2]}"],
                 "required": ["weights"],
                 "properties": {
                     "head": {
@@ -543,7 +543,7 @@
                 }
             }, {
                 "description": "A special ordered set of type II.",
-                "example": "{\"head\": \"SOS2\", \"weights\": [1, 3, 2]}",
+                "examples": ["{\"head\": \"SOS2\", \"weights\": [1, 3, 2]}"],
                 "required": ["weights"],
                 "properties": {
                     "head": {
@@ -558,7 +558,7 @@
                 }
             }, {
                 "description": "[t, x] ∈ {R^{dimension}: t ≤ (Πxᵢ)^{1 / (dimension-1)}}",
-                "example": "{\"head\": \"GeometricMeanCone\", \"dimension\": 3}",
+                "examples": ["{\"head\": \"GeometricMeanCone\", \"dimension\": 3}"],
                 "required": ["dimension"],
                 "properties": {
                     "head": {
@@ -571,7 +571,7 @@
                 }
             }, {
                 "description": "[t, x] ∈ {R^{dimension} : t ≥ ||x||₂",
-                "example": "{\"head\": \"SecondOrderCone\", \"dimension\": 3}",
+                "examples": ["{\"head\": \"SecondOrderCone\", \"dimension\": 3}"],
                 "required": ["dimension"],
                 "properties": {
                     "head": {
@@ -584,7 +584,7 @@
                 }
             }, {
                 "description": "[t, u, x] ∈ {R^{dimension} : 2tu ≥ (||x||₂)²; t, u ≥ 0}",
-                "example": "{\"head\": \"RotatedSecondOrderCone\", \"dimension\": 3}",
+                "examples": ["{\"head\": \"RotatedSecondOrderCone\", \"dimension\": 3}"],
                 "required": ["dimension"],
                 "properties": {
                     "head": {
@@ -597,7 +597,7 @@
                 }
             }, {
                 "description": "{0}^{dimension}",
-                "example": "{\"head\": \"Zeros\", \"dimension\": 3}",
+                "examples": ["{\"head\": \"Zeros\", \"dimension\": 3}"],
                 "required": ["dimension"],
                 "properties": {
                     "head": {
@@ -610,7 +610,7 @@
                 }
             }, {
                 "description": "R^{dimension}",
-                "example": "{\"head\": \"Reals\", \"dimension\": 3}",
+                "examples": ["{\"head\": \"Reals\", \"dimension\": 3}"],
                 "required": ["dimension"],
                 "properties": {
                     "head": {
@@ -623,7 +623,7 @@
                 }
             }, {
                 "description": "R₋^{dimension}",
-                "example": "{\"head\": \"Nonpositives\", \"dimension\": 3}",
+                "examples": ["{\"head\": \"Nonpositives\", \"dimension\": 3}"],
                 "required": ["dimension"],
                 "properties": {
                     "head": {
@@ -636,7 +636,7 @@
                 }
             }, {
                 "description": "R₊^{dimension}",
-                "example": "{\"head\": \"Nonnegatives\", \"dimension\": 3}",
+                "examples": ["{\"head\": \"Nonnegatives\", \"dimension\": 3}"],
                 "required": ["dimension"],
                 "properties": {
                     "head": {
@@ -665,7 +665,7 @@
                 }
             }, {
                 "description": "[x, y, z] ∈ {R³: x^{exponent} y^{1-exponent} ≥ |z|; x, y ≥ 0}",
-                "example": "{\"head\": \"PowerCone\", \"exponent\": 2.0}",
+                "examples": ["{\"head\": \"PowerCone\", \"exponent\": 2.0}"],
                 "required": ["exponent"],
                 "properties": {
                     "head": {
@@ -677,7 +677,7 @@
                 }
             }, {
                 "description": "[u, v, w] ∈ {R³: (u / exponent)^{exponent} (v / (1-exponent))^{1-exponent} ≥ |w|; u, v ≥ 0}",
-                "example": "{\"head\": \"DualPowerCone\", \"exponent\": 2.0}",
+                "examples": ["{\"head\": \"DualPowerCone\", \"exponent\": 2.0}"],
                 "required": ["exponent"],
                 "properties": {
                     "head": {
