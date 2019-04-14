@@ -300,7 +300,7 @@ The binary function `x^2` (i.e., `^(x, 2)`) is encoded as:
   "head": "^",
   "args": [
     {"head": "variable", "name": "x"},
-    {"head": "real", "value": 2},
+    {"head": "real", "value": 2}
   ]
 }
 ```
@@ -311,7 +311,7 @@ The n-ary function `x + y + 1` (i.e., `+(x, y, 1)`) is encoded as:
   "args": [
     {"head": "variable", "name": "x"},
     {"head": "variable", "name": "y"},
-    {"head": "real", "value": 1},
+    {"head": "real", "value": 1}
   ]
 }
 ```
@@ -358,34 +358,35 @@ In Polish notation, the expression graph is:
 In MathOptFormat, this expression graph can be encoded as follows:
 ```json
 {
-    "head": "ScalarNonlinearFunction",
-    "root": {
-        "head": "+",
-        "args": [
-            {"head": "node", "index": 1},
-            {"head": "node", "index": 3},
-            {"head": "variable", "name": "y"}
-        ]
-    },
-    "node_list": [
-        {
-            "head": "*", "args": [
-                {"head": "complex", "real": 1, "imag": 3},
-                {"head": "variable", "name": "x"}
-            ]
-        }, {
-            "head": "sin",
-            "args": [
-                {"head": "variable", "name": "x"}
-            ]
-        }, {
-            "head": "^",
-            "args": [
-                {"head": "node", "index": 2},
-                {"head": "real", "value": 2}
-            ]
-        }
+  "head": "ScalarNonlinearFunction",
+  "root": {
+    "head": "+",
+    "args": [
+      {"head": "node", "index": 1},
+      {"head": "node", "index": 3},
+      {"head": "variable", "name": "y"}
     ]
+  },
+  "node_list": [
+    {
+      "head": "*",
+      "args": [
+        {"head": "complex", "real": 1, "imag": 3},
+        {"head": "variable", "name": "x"}
+      ]
+    }, {
+      "head": "sin",
+      "args": [
+        {"head": "variable", "name": "x"}
+      ]
+    }, {
+      "head": "^",
+      "args": [
+        {"head": "node", "index": 2},
+        {"head": "real", "value": 2}
+      ]
+    }
+  ]
 }
 ```
 
