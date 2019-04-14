@@ -176,7 +176,7 @@ Here is a summary of the functions defined by MathOptFormat.
 
 
 For more information on `"ScalarNonlinearFunction"` functions, see
-[Nonlinear functions](@ref).
+[Nonlinear functions](nonlinear-functions).
 
 #### Vector Functions
 
