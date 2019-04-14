@@ -294,7 +294,7 @@
                 }
             }, {
                 "description": "The function `0.5x'Qx + a'x + b`, where `a` is a sparse vector of `ScalarAffineTerm`s in `affine_terms`, `b` is the scalar `constant`, and `Q` is a symmetric matrix specified by a list of `ScalarQuadraticTerm`s in `quadratic_terms`. Duplicate indices in `affine_terms` and `quadratic` are accepted, and the corresponding coefficients are summed together. Mirrored indices in `quadratic_terms` (i.e., `(i,j)` and `(j, i)`) are considered duplicates; only one need to be specified.",
-                "examples": ["{\"head\": \"ScalarAffineFunction\", \"constant\": 1.0, \"affine_terms\": [{\"coefficient\": 2.5, \"variable\": \"x\"}], \"quadratic_terms\": [{\"coefficient\": 2.0, \"variable_1\": \"x\", \"variable_2\": \"y\"}]}"],
+                "examples": ["{\"head\": \"ScalarQuadraticFunction\", \"constant\": 1.0, \"affine_terms\": [{\"coefficient\": 2.5, \"variable\": \"x\"}], \"quadratic_terms\": [{\"coefficient\": 2.0, \"variable_1\": \"x\", \"variable_2\": \"y\"}]}"],
                 "required": ["constant", "affine_terms", "quadratic_terms"],
                 "properties": {
                     "head": {
@@ -648,15 +648,77 @@
                     }
                 }
             }, {
+                "description": "{[t, X] ∈ R^{1 + d(d+1)/2} : t ≤ det(X)^{1/d}}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeTriangle`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns.",
+                "examples": ["{\"head\": \"RootDetConeTriangle\", \"side_dimension\": 2}"],
                 "required": ["side_dimension"],
                 "properties": {
                     "head": {
-                        "enum": [
-                            "RootDetConeTriangle", "RootDetConeSquare",
-                            "LogDetConeTriangle", "LogDetConeSquare",
-                            "PositiveSemidefiniteConeTriangle",
-                            "PositiveSemidefiniteConeSquare"
-                        ]
+                        "const": "RootDetConeTriangle"
+                    },
+                    "side_dimension": {
+                        "type": "integer",
+                        "minimum": 1
+                    }
+                }
+            }, {
+                "description": "{[t, X] ∈ R^{1 + d^2} : t ≤ det(X)^{1/d}, X symmetric}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeSquare`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns.",
+                "examples": ["{\"head\": \"RootDetConeSquare\", \"side_dimension\": 2}"],
+                "required": ["side_dimension"],
+                "properties": {
+                    "head": {
+                        "const": "RootDetConeSquare"
+                    },
+                    "side_dimension": {
+                        "type": "integer",
+                        "minimum": 1
+                    }
+                }
+            }, {
+                "description": "{[t, u, X] ∈ R^{2 + d(d+1)/2} : t ≤ u log(det(X/u)), u > 0}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeTriangle`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns.",
+                "examples": ["{\"head\": \"LogDetConeTriangle\", \"side_dimension\": 2}"],
+                "required": ["side_dimension"],
+                "properties": {
+                    "head": {
+                        "const": "LogDetConeTriangle"
+                    },
+                    "side_dimension": {
+                        "type": "integer",
+                        "minimum": 1
+                    }
+                }
+            }, {
+                "description": "{[t, u, X] ∈ R^{2 + d^2} : t ≤ u log(det(X/u)), X symmetric, u > 0}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeSquare`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns.",
+                "examples": ["{\"head\": \"LogDetConeSquare\", \"side_dimension\": 2}"],
+                "required": ["side_dimension"],
+                "properties": {
+                    "head": {
+                        "const": "LogDetConeSquare"
+                    },
+                    "side_dimension": {
+                        "type": "integer",
+                        "minimum": 1
+                    }
+                }
+            }, {
+                "description": "The (vectorized) cone of symmetric positive semidefinite matrices, with `side_dimension` rows and columns. The entries of the upper-right triangular part of the matrix are given column by column (or equivalently, the entries of the lower-left triangular part are given row by row).",
+                "examples": ["{\"head\": \"PositiveSemidefiniteConeTriangle\", \"side_dimension\": 2}"],
+                "required": ["side_dimension"],
+                "properties": {
+                    "head": {
+                        "const": "PositiveSemidefiniteConeTriangle"
+                    },
+                    "side_dimension": {
+                        "type": "integer",
+                        "minimum": 1
+                    }
+                }
+            }, {
+                "description": "The cone of symmetric positive semidefinite matrices, with side length `side_dimension`. The entries of the matrix are given column by column (or equivalently, row by row). The matrix is both constrained to be symmetric and to be positive semidefinite. That is, if the functions in entries `(i, j)` and `(j, i)` are different, then a constraint will be added to make sure that the entries are equal.",
+                "examples": ["{\"head\": \"PositiveSemidefiniteConeSquare\", \"side_dimension\": 2}"],
+                "required": ["side_dimension"],
+                "properties": {
+                    "head": {
+                        "const": "PositiveSemidefiniteConeSquare"
                     },
                     "side_dimension": {
                         "type": "integer",
