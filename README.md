@@ -231,6 +231,7 @@ Here is a summary of the sets defined by MathOptFormat.
 | `"PositiveSemidefiniteConeSquare"` | The cone of symmetric positive semidefinite matrices, with side length `side_dimension`. The entries of the matrix are given column by column (or equivalently, row by row). The matrix is both constrained to be symmetric and to be positive semidefinite. That is, if the functions in entries `(i, j)` and `(j, i)` are different, then a constraint will be added to make sure that the entries are equal. | {"head": "PositiveSemidefiniteConeSquare", "side_dimension": 2} |
 | `"PowerCone"` | [x, y, z] ∈ {R³: x^{exponent} y^{1-exponent} ≥ \|z\|; x, y ≥ 0} | {"head": "PowerCone", "exponent": 2.0} |
 | `"DualPowerCone"` | [u, v, w] ∈ {R³: (u / exponent)^{exponent} (v / (1-exponent))^{1-exponent} ≥ \|w\|; u, v ≥ 0} | {"head": "DualPowerCone", "exponent": 2.0} |
+| `"IndicatorSet"` | If `activate_on=one`: (y, x) ∈ {0,1}×Rᴺ: y = 0 ⟹ x ∈ S, otherwise when `activate_on=zero`: (y, x) ∈ {0,1}×Rᴺ: y = 1 ⟹ x ∈ S. | {"head": "IndicatorSet", "set": {"head": "LessThan", "upper": 2.0}, "activate_on": "one"} |
 
 ### Nonlinear functions
 

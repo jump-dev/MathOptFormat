@@ -13,31 +13,36 @@ import (
 //go:generate go run generate-static-schema.go ../mof.schema.json
 
 func main() {
-	switch os.Args[1] {
-	case "validate":
-		if len(os.Args) != 3 {
-			fmt.Println("Invalid arguments to `mof validate`")
+	if len(os.Args) < 2 {
+		fmt.Println("Invalid arguments to `mof`. Here is the help:\n")
+		PrintHelp()
+	} else {
+		switch os.Args[1] {
+		case "validate":
+			if len(os.Args) != 3 {
+				fmt.Println("Invalid arguments to `mof validate`")
+				PrintHelp()
+			}
+			filename := os.Args[2]
+			if err := ValidateFile(filename); err != nil {
+				fmt.Printf("%s is not a valid MOF file\nThe error is:\n", filename)
+				fmt.Println(err)
+			} else {
+				fmt.Printf("Success! %s conforms to the MathOptFormat schema", filename)
+			}
+		case "summarize":
+			summary, err := SummarizeSchema()
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				fmt.Println(summary)
+			}
+		case "help":
+			PrintHelp()
+		default:
+			fmt.Println("Invalid arguments to `mof`.")
 			PrintHelp()
 		}
-		filename := os.Args[2]
-		if err := ValidateFile(filename); err != nil {
-			fmt.Printf("%s is not a valid MOF file\nThe error is:\n", filename)
-			fmt.Println(err)
-		} else {
-			fmt.Printf("Success! %s conforms to the MathOptFormat schema", filename)
-		}
-	case "summarize":
-		summary, err := SummarizeSchema()
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			fmt.Println(summary)
-		}
-	case "help":
-		PrintHelp()
-	default:
-		fmt.Println("Invalid arguments to `mof`.")
-		PrintHelp()
 	}
 }
 
