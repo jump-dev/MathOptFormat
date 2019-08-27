@@ -1,7 +1,5 @@
 # MathOptFormat
 
-_WARNING: this file format is under active development. Things may change!_
-
 This repository describes a file-format for mathematical optimization problems
 called _MathOptFormat_ with the file extension `.mof.json`.
 
@@ -232,6 +230,9 @@ Here is a summary of the sets defined by MathOptFormat.
 | `"PowerCone"` | [x, y, z] ∈ {R³: x^{exponent} y^{1-exponent} ≥ \|z\|; x, y ≥ 0} | {"head": "PowerCone", "exponent": 2.0} |
 | `"DualPowerCone"` | [u, v, w] ∈ {R³: (u / exponent)^{exponent} (v / (1-exponent))^{1-exponent} ≥ \|w\|; u, v ≥ 0} | {"head": "DualPowerCone", "exponent": 2.0} |
 | `"IndicatorSet"` | If `activate_on=one`: (y, x) ∈ {0,1}×Rᴺ: y = 0 ⟹ x ∈ S, otherwise when `activate_on=zero`: (y, x) ∈ {0,1}×Rᴺ: y = 1 ⟹ x ∈ S. | {"head": "IndicatorSet", "set": {"head": "LessThan", "upper": 2.0}, "activate_on": "one"} |
+| `"NormOneCone"` | (t, x) ∈ {R^{dimension}: t ≥ Σᵢ\|xᵢ\|} | {"head": "NormOneCone", "dimension": 2} |
+| `"NormInfinityCone"` | (t, x) ∈ {R^{dimension}: t ≥ maxᵢ\|xᵢ\|} | {"head": "NormInfinityCone", "dimension": 2} |
+
 
 ### Nonlinear functions
 
