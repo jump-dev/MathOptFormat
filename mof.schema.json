@@ -768,6 +768,32 @@
                         "enum": ["one", "zero"]
                     }
                 }
+            }, {
+                "description": "(t, x) ∈ {R^{dimension}: t ≥ Σᵢ|xᵢ|}",
+                "examples": ["{\"head\": \"NormOneCone\", \"dimension\": 2}"],
+                "required": ["dimension"],
+                "properties": {
+                    "head": {
+                        "const": "NormOneCone"
+                    },
+                    "dimension": {
+                        "type": "integer",
+                        "minimum": 2
+                    }
+                }
+            }, {
+                "description": "(t, x) ∈ {R^{dimension}: t ≥ maxᵢ|xᵢ|}",
+                "examples": ["{\"head\": \"NormInfinityCone\", \"dimension\": 2}"],
+                "required": ["dimension"],
+                "properties": {
+                    "head": {
+                        "const": "NormInfinityCone"
+                    },
+                    "dimension": {
+                        "type": "integer",
+                        "minimum": 2
+                    }
+                }
             }]
         }
     }
