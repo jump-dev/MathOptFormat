@@ -1,6 +1,9 @@
 {
     "description": "The problem: [min{2x - y + 1}, max{y}]",
-    "version": 0,
+    "version": {
+        "major": 0,
+        "minor": 3
+    },
     "variables": [{
         "name": "x"
     }, {

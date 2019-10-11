@@ -2,3 +2,4 @@
 *.md
 *.bat
 *staticSchema.go
+mof

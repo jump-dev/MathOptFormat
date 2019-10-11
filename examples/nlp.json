@@ -1,6 +1,9 @@
 {
     "description": "The problem: min{2x + sin(x)^2 + y}.",
-    "version": 0,
+    "version": {
+        "major": 0,
+        "minor": 3
+    },
     "variables": [{
         "name": "x"
     }, {
