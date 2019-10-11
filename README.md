@@ -39,7 +39,10 @@ Encoded in our standard form, we have
 Encoded into the MathOptFormat file format, this example becomes:
 ```json
 {
-    "version": 1,
+    "version": {
+        "major": 0,
+        "minor": 3
+    },
     "variables": [{"name": "x"}],
     "objectives": [{
         "sense": "min",
@@ -73,8 +76,10 @@ required keys at the top level:
 
  - `"version"`
 
-   An integer describing the minimum version of MathOptFormat needed to parse
-   the file. This is included to safeguard against later revisions.
+   An object describing the minimum version of MathOptFormat needed to parse
+   the file. This is included to safeguard against later revisions. It contains
+   two fields: `"major"` and `"minor"`. These fields should be interpreted
+   using [SemVer](https://semver.org).
 
  - `"variables"`
 

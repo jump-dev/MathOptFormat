@@ -14,7 +14,8 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Invalid arguments to `mof`. Here is the help:\n")
+		fmt.Println("Invalid arguments to `mof`. Here is the help:")
+		fmt.Println()
 		PrintHelp()
 	} else {
 		switch os.Args[1] {

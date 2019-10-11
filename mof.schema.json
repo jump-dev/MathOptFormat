@@ -7,7 +7,16 @@
     "properties": {
         "version": {
             "description": "The version of MathOptFormat that this schema validates against.",
-            "const": 0
+            "type": "object",
+            "required": ["minor", "major"],
+            "properties": {
+                "minor": {
+                    "const": 3
+                },
+                "major": {
+                    "const": 0
+                }
+            }
         },
         "name": {
             "description": "The name of the model.",
