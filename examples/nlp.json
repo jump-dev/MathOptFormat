@@ -2,14 +2,14 @@
     "description": "The problem: min{2x + sin(x)^2 + y}.",
     "version": {
         "major": 0,
-        "minor": 3
+        "minor": 4
     },
     "variables": [{
         "name": "x"
     }, {
         "name": "y"
     }],
-    "objectives": [{
+    "objective": {
         "sense": "min",
         "function": {
             "head": "ScalarNonlinearFunction",
@@ -55,6 +55,6 @@
                 }]
             }]
         }
-    }],
+    },
     "constraints": []
 }

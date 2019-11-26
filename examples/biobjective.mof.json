@@ -1,35 +1,39 @@
 {
-    "description": "The problem: [min{2x - y + 1}, max{y}]",
+    "description": "The problem: [min{2x - y + 1, -y}]",
     "version": {
         "major": 0,
-        "minor": 3
+        "minor": 4
     },
     "variables": [{
         "name": "x"
     }, {
         "name": "y"
     }],
-    "objectives": [{
+    "objective": {
         "sense": "min",
         "function": {
-            "head": "ScalarAffineFunction",
+            "head": "VectorAffineFunction",
             "terms": [{
+                "output_index": 1,
+                "scalar_term": {
                     "coefficient": 2,
                     "variable": "x"
-                },
-                {
+                }
+            }, {
+                "output_index": 1,
+                "scalar_term": {
                     "coefficient": -1,
                     "variable": "y"
                 }
-            ],
-            "constant": 1
+            }, {
+                "output_index": 2,
+                "scalar_term": {
+                    "coefficient": -1,
+                    "variable": "y"
+                }
+            }],
+            "constants": [1, 0]
         }
-    }, {
-        "sense": "max",
-        "function": {
-            "head": "SingleVariable",
-            "variable": "y"
-        }
-    }],
+    },
     "constraints": []
 }
