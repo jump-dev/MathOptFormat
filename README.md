@@ -10,13 +10,13 @@ It is heavily inspired by [MathOptInterface](https://github.com/JuliaOpt/MathOpt
 MathOptFormat is a generic file format for mathematical optimization problems
 encoded in the form
 
-       min/max: fᵢ(x)       i=1,2,…,I
-    subject to: gⱼ(x) ∈ Sⱼ  j=1,2,…,J
+       min/max: f₀(x)
+    subject to: fᵢ(x) ∈ Sᵢ  i=1,2,…,I
 
-where `x ∈ ℝᴺ`, `fᵢ: ℝᴺ → ℝ`, and `gⱼ: ℝᴺ → ℝᴹʲ`, and `Sⱼ ⊆ ℝᴹʲ`.
+where `x ∈ ℝᴺ`, `fᵢ: ℝᴺ → ℝᴹⁱ`, and `Sᵢ ⊆ ℝᴹⁱ`.
 
-The functions `fᵢ` and `gⱼ`, and sets `Sⱼ` supported by MathOptFormat are
-defined in the [MathOptFormat schema](#the-schema).
+The functions `fᵢ` and sets `Sᵢ` supported by MathOptFormat are defined in the
+[MathOptFormat schema](#the-schema).
 
 The current list of supported functions and sets is not exhaustive. It is
 intended that MathOptFormat will be extended in future versions to support
@@ -32,8 +32,8 @@ consider the following linear program:
 
 Encoded in our standard form, we have
 
-    f₁(x) = 2x + 1
-    g₁(x) = x
+    f₀(x) = 2x + 1
+    f₁(x) = x
     S₁    = [1, ∞)
 
 Encoded into the MathOptFormat file format, this example becomes:
@@ -41,10 +41,10 @@ Encoded into the MathOptFormat file format, this example becomes:
 {
     "version": {
         "major": 0,
-        "minor": 3
+        "minor": 4
     },
     "variables": [{"name": "x"}],
-    "objectives": [{
+    "objective": {
         "sense": "min",
         "function": {
             "head": "ScalarAffineFunction",
@@ -53,7 +53,7 @@ Encoded into the MathOptFormat file format, this example becomes:
             ],
             "constant": 1
         }
-    }],
+    },
     "constraints": [{
         "name": "x >= 1",
         "function": {"head": "SingleVariable", "variable": "x"},
@@ -88,14 +88,15 @@ required keys at the top level:
    variable. It is illegal to have two variables with the same name. These names
    will be used later in the file to refer to each variable.
 
- - `"objectives"`
+ - `"objective"`
 
-   A list of JSON objects, with one element for each objective in the model.
-   Each object has two required keys:
+   A JSON objects describing the objective of the model. It has one required
+   keys:
 
     - `"sense"`
 
-      A string which must be `"min"` or `"max"`.
+      A string which must be `"min"`, `"max"`, or `"feasibility"`. If the sense
+      is `min` or `max`, a second key `"function"`, must be defined:
 
     - `"function"`
 
@@ -163,8 +164,8 @@ adding to this documentation, clarifying edits should be made to the
 
 The list of functions supported by MathOptFormat are contained in the
 `#/definitions/scalar_functions` and `#/definitions/vector_functions` fields of
-the schema. Scalar functions are functions for which `Mj=1`, while vector
-functions are functions for which `Mj≥1`.
+the schema. Scalar functions are functions for which `Mi=1`, while vector
+functions are functions for which `Mi≥1`.
 
 Here is a summary of the functions defined by MathOptFormat.
 

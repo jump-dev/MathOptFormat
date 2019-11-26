@@ -3,7 +3,7 @@
     "$id": "https://github.com/odow/MathOptFormat/blob/master/mof.schema.json",
     "title": "The schema for MathOptFormat",
     "type": "object",
-    "required": ["version", "variables", "objectives", "constraints"],
+    "required": ["version", "variables", "objective", "constraints"],
     "properties": {
         "version": {
             "description": "The version of MathOptFormat that this schema validates against.",
@@ -11,7 +11,7 @@
             "required": ["minor", "major"],
             "properties": {
                 "minor": {
-                    "const": 3
+                    "const": 4
                 },
                 "major": {
                     "const": 0
@@ -48,21 +48,30 @@
             },
             "uniqueItems": true
         },
-        "objectives": {
-            "description": "An array of objectives in the model.",
-            "type": "array",
-            "items": {
-                "type": "object",
-                "required": ["sense", "function"],
+        "objective": {
+            "description": "The objective of the model.",
+            "type": "object",
+            "required": ["sense"],
+            "oneOf": [{
                 "properties": {
                     "sense": {
                         "enum": ["min", "max"]
                     },
                     "function": {
-                        "$ref": "#/definitions/scalar_functions"
+                        "oneOf": [{
+                            "$ref": "#/definitions/scalar_functions"
+                        }, {
+                            "$ref": "#/definitions/vector_functions"
+                        }]
                     }
                 }
-            }
+            }, {
+                "properties": {
+                    "sense": {
+                        "const": "feasibility"
+                    }
+                }
+            }]
         },
         "constraints": {
             "description": "An array of constraints in the model. Scalar-valued functions can only be paired with scalar-sets, and the same applies for vector-valued functions and sets.",
