@@ -10,10 +10,14 @@ It is heavily inspired by [MathOptInterface](https://github.com/JuliaOpt/MathOpt
 MathOptFormat is a generic file format for mathematical optimization problems
 encoded in the form
 
-       min/max: f₀(x)
+       min: f₀(x) under C
     subject to: fᵢ(x) ∈ Sᵢ  i=1,2,…,I
 
-where `x ∈ ℝᴺ`, `fᵢ: ℝᴺ → ℝᴹⁱ`, and `Sᵢ ⊆ ℝᴹⁱ`.
+where `x ∈ ℝᴺ`, `fᵢ: ℝᴺ → ℝᴹⁱ`, `Sᵢ ⊆ ℝᴹⁱ`, and `C ⊆ ℝᴹ⁰`.
+
+`C` defines a partial ordering of the objective vectors such that:
+`x <= y ⟺ y - x ∈ C`. In the scalar case, `min f(x)` is equivalent to `C = ℝ₊`,
+and `max f(x)` is equivalent to `C = ℝ₋`.
 
 The functions `fᵢ` and sets `Sᵢ` supported by MathOptFormat are defined in the
 [MathOptFormat schema](#the-schema).
@@ -33,6 +37,7 @@ consider the following linear program:
 Encoded in our standard form, we have
 
     f₀(x) = 2x + 1
+    C = [0, ∞)
     f₁(x) = x
     S₁    = [1, ∞)
 
@@ -41,17 +46,20 @@ Encoded into the MathOptFormat file format, this example becomes:
 {
     "version": {
         "major": 0,
-        "minor": 4
+        "minor": 5
     },
     "variables": [{"name": "x"}],
     "objective": {
-        "sense": "min",
         "function": {
             "head": "ScalarAffineFunction",
             "terms": [
                 {"coefficient": 2, "variable": "x"}
             ],
             "constant": 1
+        },
+        "set": {
+            "head": "Nonnegatives",
+            "dimension": 1
         }
     },
     "constraints": [{
@@ -90,13 +98,8 @@ required keys at the top level:
 
  - `"objective"`
 
-   A JSON objects describing the objective of the model. It has one required
+   A JSON objects describing the objective of the model. It has two required
    keys:
-
-    - `"sense"`
-
-      A string which must be `"min"`, `"max"`, or `"feasibility"`. If the sense
-      is `min` or `max`, a second key `"function"`, must be defined:
 
     - `"function"`
 
@@ -122,6 +125,13 @@ required keys at the top level:
       - `"constant"`
 
         The value of `b`.
+
+    - `"set"`
+
+      A vector-valued set that defines the partial ordering. There are many
+      different types of functions that MathOptFormat recognizes (see [List of
+      supported functions](#list-of-supported-functions)), each of which has a
+      different structure.
 
  - `"constraints"`
 
@@ -238,7 +248,8 @@ Here is a summary of the sets defined by MathOptFormat.
 | `"IndicatorSet"` | If `activate_on=one`: (y, x) ∈ {0,1}×Rᴺ: y = 0 ⟹ x ∈ S, otherwise when `activate_on=zero`: (y, x) ∈ {0,1}×Rᴺ: y = 1 ⟹ x ∈ S. | {"head": "IndicatorSet", "set": {"head": "LessThan", "upper": 2.0}, "activate_on": "one"} |
 | `"NormOneCone"` | (t, x) ∈ {R^{dimension}: t ≥ Σᵢ\|xᵢ\|} | {"head": "NormOneCone", "dimension": 2} |
 | `"NormInfinityCone"` | (t, x) ∈ {R^{dimension}: t ≥ maxᵢ\|xᵢ\|} | {"head": "NormInfinityCone", "dimension": 2} |
-
+| `"PolyhedralCone"` | y ∈ {R^{q}: y = Yv, v >= 0} | {"head": "PolyhedralCone", "Y": ...} |
+| `"DualPolyhedralCone"` | y ∈ {R^{q}: Zy >= 0} | {"head": "DualPolyhedralCone", "Z": ...} |
 
 ### Nonlinear functions
 

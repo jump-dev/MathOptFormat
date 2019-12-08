@@ -2,7 +2,7 @@
     "description": "The problem: min{x | x + y >= 1, x ∈ [0, 1], y ∈ {0, 1}}",
     "version": {
         "major": 0,
-        "minor": 4
+        "minor": 5
     },
     "variables": [{
         "name": "x",
@@ -12,10 +12,13 @@
         "primal_start": 1.0
     }],
     "objective": {
-        "sense": "min",
         "function": {
             "head": "SingleVariable",
             "variable": "x"
+        },
+        "set": {
+            "head": "Nonnegatives",
+            "dimension": 1
         }
     },
     "constraints": [{

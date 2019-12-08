@@ -3,7 +3,7 @@
     "$id": "https://github.com/odow/MathOptFormat/blob/master/mof.schema.json",
     "title": "The schema for MathOptFormat",
     "type": "object",
-    "required": ["version", "variables", "objective", "constraints"],
+    "required": ["version", "variables", "constraints"],
     "properties": {
         "version": {
             "description": "The version of MathOptFormat that this schema validates against.",
@@ -11,7 +11,7 @@
             "required": ["minor", "major"],
             "properties": {
                 "minor": {
-                    "const": 4
+                    "const": 5
                 },
                 "major": {
                     "const": 0
@@ -51,27 +51,19 @@
         "objective": {
             "description": "The objective of the model.",
             "type": "object",
-            "required": ["sense"],
-            "oneOf": [{
-                "properties": {
-                    "sense": {
-                        "enum": ["min", "max"]
-                    },
-                    "function": {
-                        "oneOf": [{
-                            "$ref": "#/definitions/scalar_functions"
-                        }, {
-                            "$ref": "#/definitions/vector_functions"
-                        }]
-                    }
+            "required": ["function", "set"],
+            "properties": {
+                "function": {
+                    "oneOf": [{
+                        "$ref": "#/definitions/scalar_functions"
+                    }, {
+                        "$ref": "#/definitions/vector_functions"
+                    }]
+                },
+                "set": {
+                    "$ref": "#/definitions/vector_sets"
                 }
-            }, {
-                "properties": {
-                    "sense": {
-                        "const": "feasibility"
-                    }
-                }
-            }]
+            }
         },
         "constraints": {
             "description": "An array of constraints in the model. Scalar-valued functions can only be paired with scalar-sets, and the same applies for vector-valued functions and sets.",
@@ -810,6 +802,36 @@
                     "dimension": {
                         "type": "integer",
                         "minimum": 2
+                    }
+                }
+            }, {
+                "description": "y ∈ {R^{q}: y = Yv, v >= 0}",
+                "examples": ["{\"head\": \"PolyhedralCone\", \"Y\": ...}"],
+                "required": ["Y"],
+                "properties": {
+                    "head": {
+                        "const": "PolyhedralCone"
+                    },
+                    "Y": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/VectorAffineTerm"
+                        }
+                    }
+                }
+            }, {
+                "description": "y ∈ {R^{q}: Zy >= 0}",
+                "examples": ["{\"head\": \"DualPolyhedralCone\", \"Z\": ...}"],
+                "required": ["Z"],
+                "properties": {
+                    "head": {
+                        "const": "DualPolyhedralCone"
+                    },
+                    "Z": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/VectorAffineTerm"
+                        }
                     }
                 }
             }]
