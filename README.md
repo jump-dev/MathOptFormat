@@ -10,14 +10,14 @@ It is heavily inspired by [MathOptInterface](https://github.com/JuliaOpt/MathOpt
 MathOptFormat is a generic file format for mathematical optimization problems
 encoded in the form
 
-       min: f₀(x) under C
+       min: f₀(x) under S₀
     subject to: fᵢ(x) ∈ Sᵢ  i=1,2,…,I
 
-where `x ∈ ℝᴺ`, `fᵢ: ℝᴺ → ℝᴹⁱ`, `Sᵢ ⊆ ℝᴹⁱ`, and `C ⊆ ℝᴹ⁰`.
+where `x ∈ ℝᴺ`, `fᵢ: ℝᴺ → ℝᴹⁱ`, and `Sᵢ ⊆ ℝᴹⁱ`.
 
-`C` defines a partial ordering of the objective vectors such that:
-`x <= y ⟺ y - x ∈ C`. In the scalar case, `min f(x)` is equivalent to `C = ℝ₊`,
-and `max f(x)` is equivalent to `C = ℝ₋`.
+`S₀` defines a partial ordering of the objective vectors such that:
+`x <= y ⟺ y - x ∈ S₀`. In the scalar case, `min f(x)` is equivalent to
+`S₀ = ℝ₊`, and `max f(x)` is equivalent to `S₀ = ℝ₋`.
 
 The functions `fᵢ` and sets `Sᵢ` supported by MathOptFormat are defined in the
 [MathOptFormat schema](#the-schema).
@@ -37,7 +37,7 @@ consider the following linear program:
 Encoded in our standard form, we have
 
     f₀(x) = 2x + 1
-    C = [0, ∞)
+    S₀    = [0, ∞)
     f₁(x) = x
     S₁    = [1, ∞)
 
