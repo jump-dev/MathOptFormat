@@ -402,5 +402,5 @@ In MathOptFormat, this expression graph can be encoded as follows:
 
 - Julia
 
-  - The [MathOptFormat.jl](https://github.com/odow/MathOptFormat.jl) package
+  - The [MathOptInterface.jl](https://github.com/jump-dev/MathOptInterface.jl) package
     supports reading and writing MathOptFormat files.
