@@ -2,16 +2,13 @@
     "description": "The problem: min{0 | [1 2; 3 4][x, y] + [5, 6] ∈ R+.",
     "version": {
         "major": 0,
-        "minor": 4
+        "minor": 5
     },
     "variables": [{
         "name": "x"
     }, {
         "name": "y"
     }],
-    "objective": {
-        "sense": "feasibility"
-    },
     "constraints": [{
         "function": {
             "head": "VectorAffineFunction",

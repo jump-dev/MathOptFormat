@@ -1,8 +1,8 @@
 {
-    "description": "The problem: [min{2x - y + 1, -y}]",
+    "description": "The problem: [max{2x - y + 1, -y}]",
     "version": {
         "major": 0,
-        "minor": 4
+        "minor": 5
     },
     "variables": [{
         "name": "x"
@@ -10,7 +10,6 @@
         "name": "y"
     }],
     "objective": {
-        "sense": "min",
         "function": {
             "head": "VectorAffineFunction",
             "terms": [{
@@ -33,6 +32,10 @@
                 }
             }],
             "constants": [1, 0]
+        },
+        "set": {
+            "head": "Nonpositives",
+            "dimension": 2
         }
     },
     "constraints": []
