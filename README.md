@@ -3,7 +3,33 @@
 This repository describes a file-format for mathematical optimization problems
 called _MathOptFormat_ with the file extension `.mof.json`.
 
-It is heavily inspired by [MathOptInterface](https://github.com/JuliaOpt/MathOptInterface.jl).
+MathOptFormat is rigidly defined by the [JSON schema](http://json-schema.org/)
+available at
+[`https://jump.dev/MathOptFormat/mof.0.4.schema.json`](https://jump.dev/MathOptFormat/mof.0.4.schema.json).
+
+It is intended for the schema to be self-documenting. Instead of modifying or
+adding to this documentation, clarifying edits should be made to the
+`description` field of the relevant part of the schema.
+
+A number of examples of optimization problems encoded using MathOptFormat are
+provided in the [`/examples` directory](https://github.com/odow/MathOptFormat/tree/master/examples).
+
+A paper describing the motivation, design principles, and historical setting of
+MathOptFormat is available at:
+
+Legat, B., Dowson, O., Garcia, J.D., Lubin, M. (2020). MathOptInterface: a data
+structure for mathematical optimization problems.
+[[preprint]](http://www.optimization-online.org/DB_HTML/2020/02/7609.html)
+[[repository]](https://github.com/jump-dev/MathOptFormat)
+
+**We highly recommend you read that paper before reading further.**
+
+## Implementations
+
+- Julia
+
+  - The [MathOptInterface.jl](https://github.com/jump-dev/MathOptInterface.jl) package
+    supports reading and writing MathOptFormat files.
 
 ## Standard form
 
@@ -146,20 +172,6 @@ required keys at the top level:
       with a lower bound of `1`. See [List of supported sets](#list-of-supported-sets)
       for other sets supported by MathOptFormat.
 
-### Other examples
-
-A number of examples of optimization problems encoded using MathOptFormat are
-provided in the [`/examples` directory](https://github.com/odow/MathOptFormat/tree/master/examples).
-
-## The schema
-
-A [JSON schema](http://json-schema.org/) for the `.mof.json` file-format is
-provided in the file [`mof.schema.json`](https://github.com/odow/MathOptFormat/blob/master/mof.schema.json).
-
-It is intended for the schema to be self-documenting. Instead of modifying or
-adding to this documentation, clarifying edits should be made to the
-`description` field of the relevant part of the schema.
-
 ### List of supported functions
 
 The list of functions supported by MathOptFormat are contained in the
@@ -177,7 +189,6 @@ Here is a summary of the functions defined by MathOptFormat.
 | `"ScalarAffineFunction"` | The function `a'x + b`, where `a` is a sparse vector specified by a list of `ScalarAffineTerm`s in `terms` and `b` is the scalar in `constant`. Duplicate variables in `terms` are accepted, and the corresponding coefficients are summed together. | {"head": "ScalarAffineFunction", "constant": 1.0, "terms": [{"coefficient": 2.5, "variable": "x"}]} |
 | `"ScalarQuadraticFunction"` | The function `0.5x'Qx + a'x + b`, where `a` is a sparse vector of `ScalarAffineTerm`s in `affine_terms`, `b` is the scalar `constant`, and `Q` is a symmetric matrix specified by a list of `ScalarQuadraticTerm`s in `quadratic_terms`. Duplicate indices in `affine_terms` and `quadratic` are accepted, and the corresponding coefficients are summed together. Mirrored indices in `quadratic_terms` (i.e., `(i,j)` and `(j, i)`) are considered duplicates; only one need to be specified. | {"head": "ScalarQuadraticFunction", "constant": 1.0, "affine_terms": [{"coefficient": 2.5, "variable": "x"}], "quadratic_terms": [{"coefficient": 2.0, "variable_1": "x", "variable_2": "y"}]} |
 | `"ScalarNonlinearFunction"` | An expression graph representing a scalar nonlinear function. |  |
-
 
 For more information on `"ScalarNonlinearFunction"` functions, see
 [Nonlinear functions](nonlinear-functions).
@@ -397,10 +408,3 @@ In MathOptFormat, this expression graph can be encoded as follows:
   ]
 }
 ```
-
-## Implementations
-
-- Julia
-
-  - The [MathOptInterface.jl](https://github.com/jump-dev/MathOptInterface.jl) package
-    supports reading and writing MathOptFormat files.
