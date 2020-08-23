@@ -2,7 +2,7 @@
     "description": "The problem: min{0 | [1 2; 3 4][x, y] + [5, 6] ∈ R+.",
     "version": {
         "major": 0,
-        "minor": 4
+        "minor": 5
     },
     "variables": [{
         "name": "x"
@@ -14,7 +14,7 @@
     },
     "constraints": [{
         "function": {
-            "head": "VectorAffineFunction",
+            "type": "VectorAffineFunction",
             "terms": [{
                 "output_index": 1,
                 "scalar_term": {
@@ -43,7 +43,7 @@
             "constants": [5, 6]
         },
         "set": {
-            "head": "Nonnegatives",
+            "type": "Nonnegatives",
             "dimension": 2
         }
     }]

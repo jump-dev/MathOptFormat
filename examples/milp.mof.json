@@ -2,7 +2,7 @@
     "description": "The problem: min{x | x + y >= 1, x ∈ [0, 1], y ∈ {0, 1}}",
     "version": {
         "major": 0,
-        "minor": 4
+        "minor": 5
     },
     "variables": [{
         "name": "x",
@@ -14,14 +14,14 @@
     "objective": {
         "sense": "min",
         "function": {
-            "head": "SingleVariable",
+            "type": "SingleVariable",
             "variable": "x"
         }
     },
     "constraints": [{
         "name": "x + y >= 1",
         "function": {
-            "head": "ScalarAffineFunction",
+            "type": "ScalarAffineFunction",
             "terms": [{
                     "coefficient": 1,
                     "variable": "x"
@@ -34,28 +34,28 @@
             "constant": 0
         },
         "set": {
-            "head": "GreaterThan",
+            "type": "GreaterThan",
             "lower": 1
         }
     }, {
         "name": "x ∈ [0, 1]",
         "function": {
-            "head": "SingleVariable",
+            "type": "SingleVariable",
             "variable": "x"
         },
         "set": {
-            "head": "Interval",
+            "type": "Interval",
             "lower": 0,
             "upper": 1
         }
     }, {
         "name": "y ∈ {0, 1}",
         "function": {
-            "head": "SingleVariable",
+            "type": "SingleVariable",
             "variable": "y"
         },
         "set": {
-            "head": "ZeroOne"
+            "type": "ZeroOne"
         }
     }]
 }

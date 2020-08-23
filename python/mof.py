@@ -2,7 +2,7 @@ import json
 import jsonschema
 import os
 
-SCHEMA_FILENAME = '../mof.0.4.schema.json'
+SCHEMA_FILENAME = '../schemas/mof.0.5.schema.json'
 
 def validate(filename):
     with open(filename, 'r') as io:
@@ -27,7 +27,7 @@ def summarize_schema():
     return summary
 
 def oneOf_to_object(item):
-    head = item["properties"]["head"]
+    head = item["properties"]["type"]
     ret = []
     if "const" in head:
         description = item.get("description", "").replace("|", "\\|")

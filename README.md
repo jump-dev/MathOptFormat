@@ -5,7 +5,7 @@ called _MathOptFormat_ with the file extension `.mof.json`.
 
 MathOptFormat is rigidly defined by the [JSON schema](http://json-schema.org/)
 available at
-[`https://jump.dev/MathOptFormat/mof.0.4.schema.json`](https://jump.dev/MathOptFormat/mof.0.4.schema.json).
+[`https://jump.dev/MathOptFormat/mof.0.5.schema.json`](https://jump.dev/MathOptFormat/schemas/mof.0.5.schema.json).
 
 It is intended for the schema to be self-documenting. Instead of modifying or
 adding to this documentation, clarifying edits should be made to the
@@ -67,13 +67,13 @@ Encoded into the MathOptFormat file format, this example becomes:
 {
     "version": {
         "major": 0,
-        "minor": 4
+        "minor": 5
     },
     "variables": [{"name": "x"}],
     "objective": {
         "sense": "min",
         "function": {
-            "head": "ScalarAffineFunction",
+            "type": "ScalarAffineFunction",
             "terms": [
                 {"coefficient": 2, "variable": "x"}
             ],
@@ -82,8 +82,8 @@ Encoded into the MathOptFormat file format, this example becomes:
     },
     "constraints": [{
         "name": "x >= 1",
-        "function": {"head": "SingleVariable", "variable": "x"},
-        "set": {"head": "GreaterThan", "lower": 1}
+        "function": {"type": "SingleVariable", "variable": "x"},
+        "set": {"type": "GreaterThan", "lower": 1}
     }]
 }
 ```
@@ -92,7 +92,7 @@ Let us now describe each part of the file format in turn. First, notice that the
 file format is a valid JSON (JavaScript Object Notation) file. This enables the
 MathOptFormat to be both _human-readable_, and _machine-readable_. Some readers
 may argue that JSON is tricky to edit as a human due to the quantity of brackets
-and "boiler-plate" such as `"function"` and `"head"`. We do not disagree.
+and "boiler-plate" such as `"function"` and `"type"`. We do not disagree.
 However, we believe that JSON strikes a fine balance between human and machine
 readability.
 
@@ -130,12 +130,12 @@ required keys at the top level:
       of functions that MathOptFormat recognizes (see
       [List of supported functions](#list-of-supported-functions)), each of
       which has a different structure. However, each function has a required key
-      called `"head"` which is used to describe the type of the function. In
+      called `"type"` which is used to describe the type of the function. In
       this case, the function is `"ScalarAffineFunction"`.
 
       A `"ScalarAffineFunction"` is the function `f(x) = aᵀx + b`, where `a` is
       a constant `N×1` vector, and `b` is a scalar constant. In addition to
-      `"head"`, it has two required keys:
+      `"type"`, it has two required keys:
 
        - `"terms"`
 
@@ -185,9 +185,9 @@ Here is a summary of the functions defined by MathOptFormat.
 
 | Name | Description | Example |
 | ---- | ----------- | ------- |
-| `"SingleVariable"` | The scalar variable `variable`. | {"head": "SingleVariable", "variable": "x"} |
-| `"ScalarAffineFunction"` | The function `a'x + b`, where `a` is a sparse vector specified by a list of `ScalarAffineTerm`s in `terms` and `b` is the scalar in `constant`. Duplicate variables in `terms` are accepted, and the corresponding coefficients are summed together. | {"head": "ScalarAffineFunction", "constant": 1.0, "terms": [{"coefficient": 2.5, "variable": "x"}]} |
-| `"ScalarQuadraticFunction"` | The function `0.5x'Qx + a'x + b`, where `a` is a sparse vector of `ScalarAffineTerm`s in `affine_terms`, `b` is the scalar `constant`, and `Q` is a symmetric matrix specified by a list of `ScalarQuadraticTerm`s in `quadratic_terms`. Duplicate indices in `affine_terms` and `quadratic` are accepted, and the corresponding coefficients are summed together. Mirrored indices in `quadratic_terms` (i.e., `(i,j)` and `(j, i)`) are considered duplicates; only one need to be specified. | {"head": "ScalarQuadraticFunction", "constant": 1.0, "affine_terms": [{"coefficient": 2.5, "variable": "x"}], "quadratic_terms": [{"coefficient": 2.0, "variable_1": "x", "variable_2": "y"}]} |
+| `"SingleVariable"` | The scalar variable `variable`. | {"type": "SingleVariable", "variable": "x"} |
+| `"ScalarAffineFunction"` | The function `a'x + b`, where `a` is a sparse vector specified by a list of `ScalarAffineTerm`s in `terms` and `b` is the scalar in `constant`. Duplicate variables in `terms` are accepted, and the corresponding coefficients are summed together. | {"type": "ScalarAffineFunction", "constant": 1.0, "terms": [{"coefficient": 2.5, "variable": "x"}]} |
+| `"ScalarQuadraticFunction"` | The function `0.5x'Qx + a'x + b`, where `a` is a sparse vector of `ScalarAffineTerm`s in `affine_terms`, `b` is the scalar `constant`, and `Q` is a symmetric matrix specified by a list of `ScalarQuadraticTerm`s in `quadratic_terms`. Duplicate indices in `affine_terms` and `quadratic` are accepted, and the corresponding coefficients are summed together. Mirrored indices in `quadratic_terms` (i.e., `(i,j)` and `(j, i)`) are considered duplicates; only one need to be specified. | {"type": "ScalarQuadraticFunction", "constant": 1.0, "affine_terms": [{"coefficient": 2.5, "variable": "x"}], "quadratic_terms": [{"coefficient": 2.0, "variable_1": "x", "variable_2": "y"}]} |
 | `"ScalarNonlinearFunction"` | An expression graph representing a scalar nonlinear function. |  |
 
 For more information on `"ScalarNonlinearFunction"` functions, see
@@ -197,8 +197,8 @@ For more information on `"ScalarNonlinearFunction"` functions, see
 
 | Name | Description | Example |
 | ---- | ----------- | ------- |
-| `"VectorOfVariables"` | An ordered list of variables. | {"head": "VectorOfVariables", "variables": ["x", "y"]} |
-| `"VectorAffineFunction"` | The function `Ax + b`, where `A` is a sparse matrix specified by a list of `VectorAffineTerm`s in `terms` and `b` is a dense vector specified by `constants`. | {"head": "VectorAffineFunction", "constants": [1.0], "terms": [{"output_index": 1, "scalar_term": {"coefficient": 2.5, "variable": "x"}}]} |
+| `"VectorOfVariables"` | An ordered list of variables. | {"type": "VectorOfVariables", "variables": ["x", "y"]} |
+| `"VectorAffineFunction"` | The function `Ax + b`, where `A` is a sparse matrix specified by a list of `VectorAffineTerm`s in `terms` and `b` is a dense vector specified by `constants`. | {"type": "VectorAffineFunction", "constants": [1.0], "terms": [{"output_index": 1, "scalar_term": {"coefficient": 2.5, "variable": "x"}}]} |
 | `"VectorQuadraticFunction"` | The vector-valued quadratic function `q(x) + Ax + b`, where `q(x)` is specified by a list of `VectorQuadraticTerm`s in `quadratic_terms`, `A` is a sparse matrix specified by a list of `VectorAffineTerm`s in `affine_terms` and `b` is a dense vector specified by `constants`. |  |
 
 ### List of supported sets
@@ -214,42 +214,44 @@ Here is a summary of the sets defined by MathOptFormat.
 
 | Name | Description | Example |
 | ---- | ----------- | ------- |
-| `"LessThan"` | (-∞, upper] | {"head": "LessThan", "upper": 2.1} |
-| `"GreaterThan"` | [lower, ∞) | {"head": "GreaterThan", "lower": 2.1} |
-| `"EqualTo"` | {value} | {"head": "EqualTo", "value": 2.1} |
-| `"Interval"` | [lower, upper] | {"head": "Interval", "lower": 2.1, "upper": 3.4} |
-| `"Semiinteger"` | {0} ∪ {lower, lower + 1, ..., upper} | {"head": "Semiinteger", "lower": 2, "upper": 4} |
-| `"Semicontinuous"` | {0} ∪ [lower, upper] | {"head": "Semicontinuous", "lower": 2.1, "upper": 3.4} |
-| `"ZeroOne"` | {0, 1} | {"head": "ZeroOne"} |
-| `"Integer"` | ℤ | {"head": "Integer"} |
+| `"LessThan"` | (-∞, upper] | {"type": "LessThan", "upper": 2.1} |
+| `"GreaterThan"` | [lower, ∞) | {"type": "GreaterThan", "lower": 2.1} |
+| `"EqualTo"` | {value} | {"type": "EqualTo", "value": 2.1} |
+| `"Interval"` | [lower, upper] | {"type": "Interval", "lower": 2.1, "upper": 3.4} |
+| `"Semiinteger"` | {0} ∪ {lower, lower + 1, ..., upper} | {"type": "Semiinteger", "lower": 2, "upper": 4} |
+| `"Semicontinuous"` | {0} ∪ [lower, upper] | {"type": "Semicontinuous", "lower": 2.1, "upper": 3.4} |
+| `"ZeroOne"` | {0, 1} | {"type": "ZeroOne"} |
+| `"Integer"` | ℤ | {"type": "Integer"} |
 
 #### Vector Sets
 
 | Name | Description | Example |
 | ---- | ----------- | ------- |
-| `"ExponentialCone"` | [x, y, z] ∈ {R³: y * exp(x / y) ≤ z, y ≥ 0} | {"head": "ExponentialCone"} |
-| `"DualExponentialCone"` | [u, v, w] ∈ {R³: -u * exp(v / u) ≤ exp(1) * w, u < 0} | {"head": "DualExponentialCone"} |
-| `"SOS1"` | A special ordered set of type I. | {"head": "SOS1", "weights": [1, 3, 2]} |
-| `"SOS2"` | A special ordered set of type II. | {"head": "SOS2", "weights": [1, 3, 2]} |
-| `"GeometricMeanCone"` | [t, x] ∈ {R^{dimension}: t ≤ (Πxᵢ)^{1 / (dimension-1)}} | {"head": "GeometricMeanCone", "dimension": 3} |
-| `"SecondOrderCone"` | [t, x] ∈ {R^{dimension} : t ≥ \|\|x\|\|₂ | {"head": "SecondOrderCone", "dimension": 3} |
-| `"RotatedSecondOrderCone"` | [t, u, x] ∈ {R^{dimension} : 2tu ≥ (\|\|x\|\|₂)²; t, u ≥ 0} | {"head": "RotatedSecondOrderCone", "dimension": 3} |
-| `"Zeros"` | {0}^{dimension} | {"head": "Zeros", "dimension": 3} |
-| `"Reals"` | R^{dimension} | {"head": "Reals", "dimension": 3} |
-| `"Nonpositives"` | R₋^{dimension} | {"head": "Nonpositives", "dimension": 3} |
-| `"Nonnegatives"` | R₊^{dimension} | {"head": "Nonnegatives", "dimension": 3} |
-| `"RootDetConeTriangle"` | {[t, X] ∈ R^{1 + d(d+1)/2} : t ≤ det(X)^{1/d}}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeTriangle`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"head": "RootDetConeTriangle", "side_dimension": 2} |
-| `"RootDetConeSquare"` | {[t, X] ∈ R^{1 + d^2} : t ≤ det(X)^{1/d}, X symmetric}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeSquare`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"head": "RootDetConeSquare", "side_dimension": 2} |
-| `"LogDetConeTriangle"` | {[t, u, X] ∈ R^{2 + d(d+1)/2} : t ≤ u log(det(X/u)), u > 0}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeTriangle`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"head": "LogDetConeTriangle", "side_dimension": 2} |
-| `"LogDetConeSquare"` | {[t, u, X] ∈ R^{2 + d^2} : t ≤ u log(det(X/u)), X symmetric, u > 0}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeSquare`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"head": "LogDetConeSquare", "side_dimension": 2} |
-| `"PositiveSemidefiniteConeTriangle"` | The (vectorized) cone of symmetric positive semidefinite matrices, with `side_dimension` rows and columns. The entries of the upper-right triangular part of the matrix are given column by column (or equivalently, the entries of the lower-left triangular part are given row by row). | {"head": "PositiveSemidefiniteConeTriangle", "side_dimension": 2} |
-| `"PositiveSemidefiniteConeSquare"` | The cone of symmetric positive semidefinite matrices, with side length `side_dimension`. The entries of the matrix are given column by column (or equivalently, row by row). The matrix is both constrained to be symmetric and to be positive semidefinite. That is, if the functions in entries `(i, j)` and `(j, i)` are different, then a constraint will be added to make sure that the entries are equal. | {"head": "PositiveSemidefiniteConeSquare", "side_dimension": 2} |
-| `"PowerCone"` | [x, y, z] ∈ {R³: x^{exponent} y^{1-exponent} ≥ \|z\|; x, y ≥ 0} | {"head": "PowerCone", "exponent": 2.0} |
-| `"DualPowerCone"` | [u, v, w] ∈ {R³: (u / exponent)^{exponent} (v / (1-exponent))^{1-exponent} ≥ \|w\|; u, v ≥ 0} | {"head": "DualPowerCone", "exponent": 2.0} |
-| `"IndicatorSet"` | If `activate_on=one`: (y, x) ∈ {0,1}×Rᴺ: y = 0 ⟹ x ∈ S, otherwise when `activate_on=zero`: (y, x) ∈ {0,1}×Rᴺ: y = 1 ⟹ x ∈ S. | {"head": "IndicatorSet", "set": {"head": "LessThan", "upper": 2.0}, "activate_on": "one"} |
-| `"NormOneCone"` | (t, x) ∈ {R^{dimension}: t ≥ Σᵢ\|xᵢ\|} | {"head": "NormOneCone", "dimension": 2} |
-| `"NormInfinityCone"` | (t, x) ∈ {R^{dimension}: t ≥ maxᵢ\|xᵢ\|} | {"head": "NormInfinityCone", "dimension": 2} |
-
+| `"ExponentialCone"` | [x, y, z] ∈ {R³: y * exp(x / y) ≤ z, y ≥ 0} | {"type": "ExponentialCone"} |
+| `"DualExponentialCone"` | [u, v, w] ∈ {R³: -u * exp(v / u) ≤ exp(1) * w, u < 0} | {"type": "DualExponentialCone"} |
+| `"SOS1"` | A special ordered set of type I. | {"type": "SOS1", "weights": [1, 3, 2]} |
+| `"SOS2"` | A special ordered set of type II. | {"type": "SOS2", "weights": [1, 3, 2]} |
+| `"GeometricMeanCone"` | [t, x] ∈ {R^{dimension}: t ≤ (Πxᵢ)^{1 / (dimension-1)}} | {"type": "GeometricMeanCone", "dimension": 3} |
+| `"SecondOrderCone"` | [t, x] ∈ {R^{dimension} : t ≥ \|\|x\|\|₂ | {"type": "SecondOrderCone", "dimension": 3} |
+| `"RotatedSecondOrderCone"` | [t, u, x] ∈ {R^{dimension} : 2tu ≥ (\|\|x\|\|₂)²; t, u ≥ 0} | {"type": "RotatedSecondOrderCone", "dimension": 3} |
+| `"Zeros"` | {0}^{dimension} | {"type": "Zeros", "dimension": 3} |
+| `"Reals"` | R^{dimension} | {"type": "Reals", "dimension": 3} |
+| `"Nonpositives"` | R₋^{dimension} | {"type": "Nonpositives", "dimension": 3} |
+| `"Nonnegatives"` | R₊^{dimension} | {"type": "Nonnegatives", "dimension": 3} |
+| `"RootDetConeTriangle"` | {[t, X] ∈ R^{1 + d(d+1)/2} : t ≤ det(X)^{1/d}}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeTriangle`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"type": "RootDetConeTriangle", "side_dimension": 2} |
+| `"RootDetConeSquare"` | {[t, X] ∈ R^{1 + d^2} : t ≤ det(X)^{1/d}, X symmetric}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeSquare`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"type": "RootDetConeSquare", "side_dimension": 2} |
+| `"LogDetConeTriangle"` | {[t, u, X] ∈ R^{2 + d(d+1)/2} : t ≤ u log(det(X/u)), u > 0}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeTriangle`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"type": "LogDetConeTriangle", "side_dimension": 2} |
+| `"LogDetConeSquare"` | {[t, u, X] ∈ R^{2 + d^2} : t ≤ u log(det(X/u)), X symmetric, u > 0}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeSquare`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"type": "LogDetConeSquare", "side_dimension": 2} |
+| `"PositiveSemidefiniteConeTriangle"` | The (vectorized) cone of symmetric positive semidefinite matrices, with `side_dimension` rows and columns. The entries of the upper-right triangular part of the matrix are given column by column (or equivalently, the entries of the lower-left triangular part are given row by row). | {"type": "PositiveSemidefiniteConeTriangle", "side_dimension": 2} |
+| `"PositiveSemidefiniteConeSquare"` | The cone of symmetric positive semidefinite matrices, with side length `side_dimension`. The entries of the matrix are given column by column (or equivalently, row by row). The matrix is both constrained to be symmetric and to be positive semidefinite. That is, if the functions in entries `(i, j)` and `(j, i)` are different, then a constraint will be added to make sure that the entries are equal. | {"type": "PositiveSemidefiniteConeSquare", "side_dimension": 2} |
+| `"PowerCone"` | [x, y, z] ∈ {R³: x^{exponent} y^{1-exponent} ≥ \|z\|; x, y ≥ 0} | {"type": "PowerCone", "exponent": 2.0} |
+| `"DualPowerCone"` | [u, v, w] ∈ {R³: (u / exponent)^{exponent} (v / (1-exponent))^{1-exponent} ≥ \|w\|; u, v ≥ 0} | {"type": "DualPowerCone", "exponent": 2.0} |
+| `"IndicatorSet"` | If `activate_on=one`: (y, x) ∈ {0,1}×Rᴺ: y = 0 ⟹ x ∈ S, otherwise when `activate_on=zero`: (y, x) ∈ {0,1}×Rᴺ: y = 1 ⟹ x ∈ S. | {"type": "IndicatorSet", "set": {"type": "LessThan", "upper": 2.0}, "activate_on": "one"} |
+| `"NormOneCone"` | (t, x) ∈ {R^{dimension}: t ≥ Σᵢ\|xᵢ\|} | {"type": "NormOneCone", "dimension": 2} |
+| `"NormInfinityCone"` | (t, x) ∈ {R^{dimension}: t ≥ maxᵢ\|xᵢ\|} | {"type": "NormInfinityCone", "dimension": 2} |
+| `"RelativeEntropyCone"` | (u, v, w) ∈ {R^{dimension}: u ≥ sumᵢ wᵢlog(wᵢ/vᵢ), vᵢ ≥ 0, wᵢ ≥ 0} | {"type": "RelativeEntropyCone", "dimension": 3} |
+| `"NormSpectralCone"` | (t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ σ₁(X)} | {"type": "NormSpectralCone", "row_dim": 1, "column_dim": 2} |
+| `"NormNuclearCone"` | (t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ σ₁(X)} | {"type": "NormNuclearCone", "row_dim": 1, "column_dim": 2} |
 
 ### Nonlinear functions
 
@@ -258,7 +260,7 @@ expression graphs is stored in Polish prefix notation. For example, the
 nonlinear expression `sin²(x)` is expressed as `^(sin(x), 2)`.
 
 The expression graph is stored as an object with three required fields:
-`"head"`, which must be `"ScalarNonlinearFunction"`, as well as `"root"` and
+`"type"`, which must be `"ScalarNonlinearFunction"`, as well as `"root"` and
 `"node_list"`.
 
 `"root"` contains an object defining the root node of the expression graph. All
@@ -274,23 +276,23 @@ described as follows.
 
 | Head | Description | Example |
 | ---- | ----------- | ------- |
-| `"real"` | A real-valued numeric constant | {"head": "real", "value": 1.0} |
-| `"complex"` | A complex-valued numeric constant | {"head": "complex", "real": 1.0, "imag": 2.0} |
-| `"variable"` | A reference to an optimization variable | {"head": "variable", "name": "x"} |
+| `"real"` | A real-valued numeric constant | {"type": "real", "value": 1.0} |
+| `"complex"` | A complex-valued numeric constant | {"type": "complex", "real": 1.0, "imag": 2.0} |
+| `"variable"` | A reference to an optimization variable | {"type": "variable", "name": "x"} |
 
 Nodes in the flattened list `"node_list"` can be referenced by an object with
-the `"head"` field `"node"` and a field `"index"` that is the one-based index of
+the `"type"` field `"node"` and a field `"index"` that is the one-based index of
 the node in `"node_list"`.
 
 | Head | Description | Example |
 | ---- | ----------- | ------- |
-| `"node"` | A pointer to a (1-indexed) element in the `node_list` field in a nonlinear function | {"head": "node", "index": 2} |
+| `"node"` | A pointer to a (1-indexed) element in the `node_list` field in a nonlinear function | {"type": "node", "index": 2} |
 
 #### Operators
 
 All nonlinear operators in MathOptFormat are described by a JSON object with two fields:
 
- - `"head"`
+ - `"type"`
 
    A string that corresponds to the operator.
 
@@ -307,30 +309,30 @@ The number of elements in `"args"` depends on the arity of the operator. MathOpt
 To give some examples, the unary function `log(x)` is encoded as:
 ```json
 {
-  "head": "log",
+  "type": "log",
   "args": [
-    {"head": "variable", "name": "x"}
+    {"type": "variable", "name": "x"}
   ]
 }
 ```
 The binary function `x^2` (i.e., `^(x, 2)`) is encoded as:
 ```json
 {
-  "head": "^",
+  "type": "^",
   "args": [
-    {"head": "variable", "name": "x"},
-    {"head": "real", "value": 2}
+    {"type": "variable", "name": "x"},
+    {"type": "real", "value": 2}
   ]
 }
 ```
 The n-ary function `x + y + 1` (i.e., `+(x, y, 1)`) is encoded as:
 ```json
 {
-  "head": "+",
+  "type": "+",
   "args": [
-    {"head": "variable", "name": "x"},
-    {"head": "variable", "name": "y"},
-    {"head": "real", "value": 1}
+    {"type": "variable", "name": "x"},
+    {"type": "variable", "name": "y"},
+    {"type": "real", "value": 1}
   ]
 }
 ```
@@ -377,32 +379,32 @@ In Polish notation, the expression graph is:
 In MathOptFormat, this expression graph can be encoded as follows:
 ```json
 {
-  "head": "ScalarNonlinearFunction",
+  "type": "ScalarNonlinearFunction",
   "root": {
-    "head": "+",
+    "type": "+",
     "args": [
-      {"head": "node", "index": 1},
-      {"head": "node", "index": 3},
-      {"head": "variable", "name": "y"}
+      {"type": "node", "index": 1},
+      {"type": "node", "index": 3},
+      {"type": "variable", "name": "y"}
     ]
   },
   "node_list": [
     {
-      "head": "*",
+      "type": "*",
       "args": [
-        {"head": "complex", "real": 1, "imag": 3},
-        {"head": "variable", "name": "x"}
+        {"type": "complex", "real": 1, "imag": 3},
+        {"type": "variable", "name": "x"}
       ]
     }, {
-      "head": "sin",
+      "type": "sin",
       "args": [
-        {"head": "variable", "name": "x"}
+        {"type": "variable", "name": "x"}
       ]
     }, {
-      "head": "^",
+      "type": "^",
       "args": [
-        {"head": "node", "index": 2},
-        {"head": "real", "value": 2}
+        {"type": "node", "index": 2},
+        {"type": "real", "value": 2}
       ]
     }
   ]

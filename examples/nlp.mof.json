@@ -2,7 +2,7 @@
     "description": "The problem: min{2x + sin(x)^2 + y}.",
     "version": {
         "major": 0,
-        "minor": 4
+        "minor": 5
     },
     "variables": [{
         "name": "x"
@@ -12,45 +12,45 @@
     "objective": {
         "sense": "min",
         "function": {
-            "head": "ScalarNonlinearFunction",
+            "type": "ScalarNonlinearFunction",
             "root": {
-                "head": "node",
+                "type": "node",
                 "index": 4
             },
             "node_list": [{
-                "head": "*",
+                "type": "*",
                 "args": [{
-                    "head": "real",
+                    "type": "real",
                     "value": 2
                 }, {
-                    "head": "variable",
+                    "type": "variable",
                     "name": "x"
                 }]
             }, {
-                "head": "sin",
+                "type": "sin",
                 "args": [{
-                    "head": "variable",
+                    "type": "variable",
                     "name": "x"
                 }]
             }, {
-                "head": "^",
+                "type": "^",
                 "args": [{
-                    "head": "node",
+                    "type": "node",
                     "index": 2
                 }, {
-                    "head": "real",
+                    "type": "real",
                     "value": 2
                 }]
             }, {
-                "head": "+",
+                "type": "+",
                 "args": [{
-                    "head": "node",
+                    "type": "node",
                     "index": 1
                 }, {
-                    "head": "node",
+                    "type": "node",
                     "index": 3
                 }, {
-                    "head": "variable",
+                    "type": "variable",
                     "name": "y"
                 }]
             }]
