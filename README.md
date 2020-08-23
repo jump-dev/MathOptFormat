@@ -249,7 +249,9 @@ Here is a summary of the sets defined by MathOptFormat.
 | `"IndicatorSet"` | If `activate_on=one`: (y, x) ∈ {0,1}×Rᴺ: y = 0 ⟹ x ∈ S, otherwise when `activate_on=zero`: (y, x) ∈ {0,1}×Rᴺ: y = 1 ⟹ x ∈ S. | {"type": "IndicatorSet", "set": {"type": "LessThan", "upper": 2.0}, "activate_on": "one"} |
 | `"NormOneCone"` | (t, x) ∈ {R^{dimension}: t ≥ Σᵢ\|xᵢ\|} | {"type": "NormOneCone", "dimension": 2} |
 | `"NormInfinityCone"` | (t, x) ∈ {R^{dimension}: t ≥ maxᵢ\|xᵢ\|} | {"type": "NormInfinityCone", "dimension": 2} |
-
+| `"RelativeEntropyCone"` | (u, v, w) ∈ {R^{dimension}: u ≥ sumᵢ wᵢlog(wᵢ/vᵢ), vᵢ ≥ 0, wᵢ ≥ 0} | {"type": "RelativeEntropyCone", "dimension": 3} |
+| `"NormSpectralCone"` | (t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ σ₁(X)} | {"type": "NormSpectralCone", "row_dim": 1, "column_dim": 2} |
+| `"NormNuclearCone"` | (t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ σ₁(X)} | {"type": "NormNuclearCone", "row_dim": 1, "column_dim": 2} |
 
 ### Nonlinear functions
 
