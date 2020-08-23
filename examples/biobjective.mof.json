@@ -2,7 +2,7 @@
     "description": "The problem: [min{2x - y + 1, -y}]",
     "version": {
         "major": 0,
-        "minor": 4
+        "minor": 5
     },
     "variables": [{
         "name": "x"
@@ -12,7 +12,7 @@
     "objective": {
         "sense": "min",
         "function": {
-            "head": "VectorAffineFunction",
+            "type": "VectorAffineFunction",
             "terms": [{
                 "output_index": 1,
                 "scalar_term": {
