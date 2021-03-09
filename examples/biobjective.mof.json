@@ -2,7 +2,7 @@
     "description": "The problem: [min{2x - y + 1, -y}]",
     "version": {
         "major": 0,
-        "minor": 5
+        "minor": 6
     },
     "variables": [{
         "name": "x"
