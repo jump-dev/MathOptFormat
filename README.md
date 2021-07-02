@@ -251,7 +251,7 @@ Here is a summary of the sets defined by MathOptFormat.
 | `"NormInfinityCone"` | (t, x) ∈ {R^{dimension}: t ≥ maxᵢ\|xᵢ\|} | {"type": "NormInfinityCone", "dimension": 2} |
 | `"RelativeEntropyCone"` | (u, v, w) ∈ {R^{dimension}: u ≥ sumᵢ wᵢlog(wᵢ/vᵢ), vᵢ ≥ 0, wᵢ ≥ 0} | {"type": "RelativeEntropyCone", "dimension": 3} |
 | `"NormSpectralCone"` | (t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ σ₁(X)} | {"type": "NormSpectralCone", "row_dim": 1, "column_dim": 2} |
-| `"NormNuclearCone"` | (t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ σ₁(X)} | {"type": "NormNuclearCone", "row_dim": 1, "column_dim": 2} |
+| `"NormNuclearCone"` | (t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ Σᵢ σᵢ(X)} | {"type": "NormNuclearCone", "row_dim": 1, "column_dim": 2} |
 | `"Complements"` | The set corresponding to a mixed complementarity constraint. Complementarity constraints should be specified with an AbstractVectorFunction-in-Complements(dimension) constraint. The dimension of the vector-valued function `F` must be `dimension`. This defines a complementarity constraint between the scalar function `F[i]` and the variable in `F[i + dimension/2]`. Thus, `F[i + dimension/2]` must be interpretable as a single variable `x_i` (e.g., `1.0 * x + 0.0`). The mixed complementarity problem consists of finding `x_i` in the interval `[lb, ub]` (i.e., in the set `Interval(lb, ub)`), such that the following holds: 1. `F_i(x) == 0` if `lb_i < x_i < ub_i`; 2. `F_i(x) >= 0` if `lb_i == x_i`; 3. `F_i(x) <= 0` if `x_i == ub_i`. Classically, the bounding set for `x_i` is `Interval(0, Inf)`, which recovers: `0 <= F_i(x) ⟂ x_i >= 0`, where the `⟂` operator implies `F_i(x) * x_i = 0`. | {"type": "Complements", "dimension": 2} |
 
 ### Nonlinear functions
