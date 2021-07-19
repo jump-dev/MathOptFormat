@@ -5,14 +5,14 @@ import os
 SCHEMA_FILENAME = '../schemas/mof.0.6.schema.json'
 
 def validate(filename):
-    with open(filename, 'r') as io:
+    with open(filename, 'r', encoding='utf-8') as io:
         instance = json.load(io)
-    with open(SCHEMA_FILENAME, 'r') as io:
+    with open(SCHEMA_FILENAME, 'r', encoding='utf-8') as io:
         schema = json.load(io)
     jsonschema.validate(instance = instance, schema = schema)
 
 def summarize_schema():
-    with open(SCHEMA_FILENAME, 'r') as io:
+    with open(SCHEMA_FILENAME, 'r', encoding='utf-8') as io:
         schema = json.load(io)
     summary = "## Sets\n"
     summary += "\n### Scalar Sets\n\n" + summarize(schema, "scalar_sets")
