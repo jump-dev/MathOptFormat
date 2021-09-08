@@ -281,14 +281,14 @@
             "type": "object",
             "required": ["type"],
             "oneOf": [{
-                "description": "The scalar variable `variable`.",
-                "examples": ["{\"type\": \"SingleVariable\", \"variable\": \"x\"}"],
-                "required": ["variable"],
+                "description": "The scalar variable `x`.",
+                "examples": ["{\"type\": \"Variable\", \"name\": \"x\"}"],
+                "required": ["name"],
                 "properties": {
                     "type": {
-                        "const": "SingleVariable"
+                        "const": "Variable"
                     },
-                    "variable": {
+                    "name": {
                         "type": "string"
                     }
                 }

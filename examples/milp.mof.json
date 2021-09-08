@@ -14,8 +14,8 @@
     "objective": {
         "sense": "min",
         "function": {
-            "type": "SingleVariable",
-            "variable": "x"
+            "type": "Variable",
+            "name": "x"
         }
     },
     "constraints": [{
@@ -40,8 +40,8 @@
     }, {
         "name": "x ∈ [0, 1]",
         "function": {
-            "type": "SingleVariable",
-            "variable": "x"
+            "type": "Variable",
+            "name": "x"
         },
         "set": {
             "type": "Interval",
@@ -51,8 +51,8 @@
     }, {
         "name": "y ∈ {0, 1}",
         "function": {
-            "type": "SingleVariable",
-            "variable": "y"
+            "type": "Variable",
+            "name": "y"
         },
         "set": {
             "type": "ZeroOne"
