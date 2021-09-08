@@ -1,8 +1,8 @@
 {
     "description": "The problem: min{x | x + y >= 1, x ∈ [0, 1], y ∈ {0, 1}}",
     "version": {
-        "major": 0,
-        "minor": 7
+        "major": 1,
+        "minor": 0
     },
     "variables": [{
         "name": "x",

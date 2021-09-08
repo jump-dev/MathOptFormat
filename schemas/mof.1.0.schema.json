@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/schema#",
-    "$id": "https://jump.dev/MathOptFormat/schemas/mof.0.7.schema.json",
+    "$id": "https://jump.dev/MathOptFormat/schemas/mof.1.0.schema.json",
     "title": "The schema for MathOptFormat",
     "type": "object",
     "required": ["version", "variables", "objective", "constraints"],
@@ -11,10 +11,10 @@
             "required": ["minor", "major"],
             "properties": {
                 "minor": {
-                    "const": 6
+                    "const": 0
                 },
                 "major": {
-                    "const": 0
+                    "const": 1
                 }
             }
         },
