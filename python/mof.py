@@ -3,7 +3,7 @@ import jsonschema
 import os
 
 
-SCHEMA_FILENAME = '../schemas/mof.0.7.schema.json'
+SCHEMA_FILENAME = '../schemas/mof.1.0.schema.json'
 
 def validate(filename):
     with open(filename, 'r', encoding='utf-8') as io:
