@@ -5,7 +5,7 @@ called _MathOptFormat_ with the file extension `.mof.json`.
 
 MathOptFormat is rigidly defined by the [JSON schema](http://json-schema.org/)
 available at
-[`https://jump.dev/MathOptFormat/schemas/mof.0.6.schema.json`](https://jump.dev/MathOptFormat/schemas/mof.0.6.schema.json).
+[`https://jump.dev/MathOptFormat/schemas/mof.1.0.schema.json`](https://jump.dev/MathOptFormat/schemas/mof.1.0.schema.json).
 
 It is intended for the schema to be self-documenting. Instead of modifying or
 adding to this documentation, clarifying edits should be made to the
@@ -82,7 +82,7 @@ Encoded into the MathOptFormat file format, this example becomes:
     },
     "constraints": [{
         "name": "x >= 1",
-        "function": {"type": "SingleVariable", "variable": "x"},
+        "function": {"type": "Variable", "name": "x"},
         "set": {"type": "GreaterThan", "lower": 1}
     }]
 }
@@ -185,7 +185,7 @@ Here is a summary of the functions defined by MathOptFormat.
 
 | Name | Description | Example |
 | ---- | ----------- | ------- |
-| `"SingleVariable"` | The scalar variable `variable`. | {"type": "SingleVariable", "variable": "x"} |
+| `"Variable"` | The scalar variable `x`. | {"type": "Variable", "name": "x"} |
 | `"ScalarAffineFunction"` | The function `a'x + b`, where `a` is a sparse vector specified by a list of `ScalarAffineTerm`s in `terms` and `b` is the scalar in `constant`. Duplicate variables in `terms` are accepted, and the corresponding coefficients are summed together. | {"type": "ScalarAffineFunction", "constant": 1.0, "terms": [{"coefficient": 2.5, "variable": "x"}]} |
 | `"ScalarQuadraticFunction"` | The function `0.5x'Qx + a'x + b`, where `a` is a sparse vector of `ScalarAffineTerm`s in `affine_terms`, `b` is the scalar `constant`, and `Q` is a symmetric matrix specified by a list of `ScalarQuadraticTerm`s in `quadratic_terms`. Duplicate indices in `affine_terms` and `quadratic` are accepted, and the corresponding coefficients are summed together. Mirrored indices in `quadratic_terms` (i.e., `(i,j)` and `(j, i)`) are considered duplicates; only one need to be specified. | {"type": "ScalarQuadraticFunction", "constant": 1.0, "affine_terms": [{"coefficient": 2.5, "variable": "x"}], "quadratic_terms": [{"coefficient": 2.0, "variable_1": "x", "variable_2": "y"}]} |
 | `"ScalarNonlinearFunction"` | An expression graph representing a scalar nonlinear function. |  |
