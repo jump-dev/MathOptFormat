@@ -2,7 +2,7 @@
     "description": "The problem: min{x^2 + x * y + y^2}",
     "version": {
         "major": 1,
-        "minor": 0
+        "minor": 1
     },
     "variables": [{
         "name": "x"

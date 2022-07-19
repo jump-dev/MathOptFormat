@@ -66,8 +66,8 @@ Encoded into the MathOptFormat file format, this example becomes:
 ```json
 {
     "version": {
-        "major": 0,
-        "minor": 6
+        "major": 1,
+        "minor": 1
     },
     "variables": [{"name": "x"}],
     "objective": {
@@ -253,6 +253,16 @@ Here is a summary of the sets defined by MathOptFormat.
 | `"NormSpectralCone"` | (t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ σ₁(X)} | {"type": "NormSpectralCone", "row_dim": 1, "column_dim": 2} |
 | `"NormNuclearCone"` | (t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ Σᵢ σᵢ(X)} | {"type": "NormNuclearCone", "row_dim": 1, "column_dim": 2} |
 | `"Complements"` | The set corresponding to a mixed complementarity constraint. Complementarity constraints should be specified with an AbstractVectorFunction-in-Complements(dimension) constraint. The dimension of the vector-valued function `F` must be `dimension`. This defines a complementarity constraint between the scalar function `F[i]` and the variable in `F[i + dimension/2]`. Thus, `F[i + dimension/2]` must be interpretable as a single variable `x_i` (e.g., `1.0 * x + 0.0`). The mixed complementarity problem consists of finding `x_i` in the interval `[lb, ub]` (i.e., in the set `Interval(lb, ub)`), such that the following holds: 1. `F_i(x) == 0` if `lb_i < x_i < ub_i`; 2. `F_i(x) >= 0` if `lb_i == x_i`; 3. `F_i(x) <= 0` if `x_i == ub_i`. Classically, the bounding set for `x_i` is `Interval(0, Inf)`, which recovers: `0 <= F_i(x) ⟂ x_i >= 0`, where the `⟂` operator implies `F_i(x) * x_i = 0`. | {"type": "Complements", "dimension": 2} |
+| `"AllDifferent"` | The set {x in Z^d} such that no two elements in x take the same value and dimension=d. | {"type": "AllDifferent", "dimension": 2} |
+| `"BinPacking"` | The set `{x in Z^d}` where `d = length(w)`, such that each item `i` in `1:d` of weight `w[i]` is put into bin `x[i]`, and the total weight of each bin does not exceed `c`. | {"type": "BinPacking", "capacity": 3.0, "weights": [1.0, 2.0, 3.0]} |
+| `"Circuit"` | The set `{x in {1..d}^d}` that constraints `x` to be a circuit, such that `x_i = j` means that `j` is the successor of `i`, and `dimension = d`. | {"type": "Circuit", "dimension": 3} |
+| `"CountAtLeast"` | The set `{x in Z^{d_1 + d_2 + ldots d_N}}`, where `x` is partitioned into `N` subsets (`{x_1,  ldots, x_{d_1}}`, `{x_{d_1 + 1},  ldots, x_{d_1 + d_2}}` and so on), and at least `n` elements of each subset take one of the values in `set`. | {"type": "CountAtLeast", "n": 1, "partitions": [2, 2], "set": [3]} |
+| `"CountBelongs"` | The set `{(n, x) in Z^{1+d}}`, such that `n` elements of the vector `x` take on of the values in `set` and `dimension = 1 + d`. | {"type": "CountBelongs", "dimension": 3, "set": [3, 4, 5]} |
+| `"CountDistinct"` | The set `{(n, x) in Z^{1+d}}`, such that the number of distinct values in `x` is `n` and `dimension = 1 + d`. | {"type": "CountDistinct", "dimension": 3} |
+| `"CountGreaterThan"` | The set `{(c, y, x) in Z^{1+1+d}}`, such that `c` is strictly greater than the number of occurances of `y` in `x` and `dimension = 1 + 1 + d`. | {"type": "CountGreaterThan", "dimension": 3} |
+| `"Cumulative"` | The set `{(s, d, r, b) in Z^{3n+1}}`, representing the `cumulative` global constraint, where `n == length(s) == length(r) == length(b)` and `dimension = 3n + 1`. `Cumulative` requires that a set of tasks given by start times `s`, durations `d`, and resource requirements `r`, never requires more than the global resource bound `b` at any one time. | {"type": "Cumulative", "dimension": 10} |
+| `"Path"` | Given a graph comprised of a set of nodes `1..N` and a set of arcs `1..E` represented by an edge from node `from[i]` to node `to[i]`, `Path` constrains the set `(s, t, ns, es) in (1..N)times(1..E)times{0,1}^Ntimes{0,1}^E`, to form subgraph that is a path from node `s` to node `t`, where node `n` is in the path if `ns[n]` is `1`, and edge `e` is in the path if `es[e]` is `1`. The path must be acyclic, and it must traverse all nodes `n` for which `ns[n]` is `1`, and all edges `e` for which `es[e]` is `1`. | {"type": "Path", "from": [1, 1, 2, 2, 3], "to": [2, 3, 3, 4, 4]} |
+| `"Table"` | The set `{x in R^d}` where `d = size(table, 2)`, such that `x` belongs to one row of `table`. That is, there exists some `j` in `1:size(table, 1)`, such that `x[i] = table[j, i]` for all `i=1:size(table, 2)`. | {"type": "Table", "table": [[1, 1, 0], [0, 1, 1]]} |
 
 ### Nonlinear functions
 

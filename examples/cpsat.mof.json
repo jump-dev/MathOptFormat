@@ -1,0 +1,113 @@
+{
+    "description": "A constraint programming problem",
+    "version": {
+        "major": 1,
+        "minor": 1
+    },
+    "variables": [{
+        "name": "x"
+    }, {
+        "name": "y"
+    }, {
+        "name": "z"
+    }],
+    "objective": {
+        "sense": "feasibility"
+    },
+    "constraints": [{
+        "function": {
+            "type": "VectorOfVariables",
+            "variables": ["x", "y"]
+        },
+        "set": {
+            "type": "AllDifferent",
+            "dimension": 2
+        }
+    },{
+        "function": {
+            "type": "VectorOfVariables",
+            "variables": ["x", "y", "z"]
+        },
+        "set": {
+            "type": "BinPacking",
+            "capacity": 3.0,
+            "weights": [1.0, 2.0, 3.0]
+        }
+    },{
+        "function": {
+            "type": "VectorOfVariables",
+            "variables": ["x", "y"]
+        },
+        "set": {
+            "type": "Circuit",
+            "dimension": 2
+        }
+    },{
+        "function": {
+            "type": "VectorOfVariables",
+            "variables": ["x", "y", "y", "z"]
+        },
+        "set": {
+            "type": "CountAtLeast",
+            "n": 1,
+            "partitions": [2, 2],
+            "set": [3]
+        }
+    },{
+        "function": {
+            "type": "VectorOfVariables",
+            "variables": ["x", "x", "y", "z"]
+        },
+        "set": {
+            "type": "CountBelongs",
+            "dimension": 3,
+            "set": [3, 4, 5]
+        }
+    },{
+        "function": {
+            "type": "VectorOfVariables",
+            "variables": ["x", "y", "z"]
+        },
+        "set": {
+            "type": "CountDistinct",
+            "dimension": 3
+        }
+    },{
+        "function": {
+            "type": "VectorOfVariables",
+            "variables": ["x", "y", "z"]
+        },
+        "set": {
+            "type": "CountGreaterThan",
+            "dimension": 3
+        }
+    },{
+        "function": {
+            "type": "VectorOfVariables",
+            "variables": ["x", "x", "y", "z"]
+        },
+        "set": {
+            "type": "Cumulative",
+            "dimension": 4
+        }
+    },{
+        "function": {
+            "type": "VectorOfVariables",
+            "variables": ["x", "y", "z"]
+        },
+        "set": {
+            "type": "Path",
+            "from": [1, 1, 2, 2, 3],
+            "to": [2, 3, 3, 4, 4]
+        }
+    },{
+        "function": {
+            "type": "VectorOfVariables",
+            "variables": ["x", "y", "z"]
+        },
+        "set": {
+            "type": "Table",
+            "table": [[0, 1, 1], [1, 1, 0]]
+        }
+    }]
+}
