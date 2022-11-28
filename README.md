@@ -5,7 +5,7 @@ called _MathOptFormat_ with the file extension `.mof.json`.
 
 MathOptFormat is rigidly defined by the [JSON schema](http://json-schema.org/)
 available at
-[`https://jump.dev/MathOptFormat/schemas/mof.1.1.schema.json`](https://jump.dev/MathOptFormat/schemas/mof.1.1.schema.json).
+[`https://jump.dev/MathOptFormat/schemas/mof.1.2.schema.json`](https://jump.dev/MathOptFormat/schemas/mof.1.2.schema.json).
 
 It is intended for the schema to be self-documenting. Instead of modifying or
 adding to this documentation, clarifying edits should be made to the
@@ -67,7 +67,7 @@ Encoded into the MathOptFormat file format, this example becomes:
 {
     "version": {
         "major": 1,
-        "minor": 1
+        "minor": 2
     },
     "variables": [{"name": "x"}],
     "objective": {
