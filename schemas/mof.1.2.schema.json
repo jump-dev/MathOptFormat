@@ -41,7 +41,7 @@
                         "type": "string"
                     },
                     "primal_start": {
-                        "description": "An initial value that the optimizer may use to warm-start the solution process.",
+                        "description": "An initial value for the variable's primal solution that the optimizer may use to warm-start the solution process.",
                         "type": "number"
                     }
                 }
@@ -94,9 +94,11 @@
                             "$ref": "#/definitions/scalar_sets"
                         },
                         "primal_start": {
+                            "description": "An initial scalar value for the constraint's primal solution that the optimizer may use to warm-start the solution process.",
                             "type": "number"
                         },
                         "dual_start": {
+                            "description": "An initial scalar value for the constraint's dual solution that the optimizer may use to warm-start the solution process.",
                             "type": "number"
                         }
                     }
@@ -110,12 +112,14 @@
                             "$ref": "#/definitions/vector_sets"
                         },
                         "primal_start": {
+                            "description": "An initial vector for the constraint's primal solution that the optimizer may use to warm-start the solution process.",
                             "type": "array",
                             "items": {
                                 "type": "number"
                             }
                         },
                         "dual_start": {
+                            "description": "An initial vector for the constraint's dual solution that the optimizer may use to warm-start the solution process.",
                             "type": "array",
                             "items": {
                                 "type": "number"
