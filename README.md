@@ -5,24 +5,21 @@ called _MathOptFormat_ with the file extension `.mof.json`.
 
 MathOptFormat is rigidly defined by the [JSON schema](http://json-schema.org/)
 available at
-[`https://jump.dev/MathOptFormat/schemas/mof.1.2.schema.json`](https://jump.dev/MathOptFormat/schemas/mof.1.2.schema.json).
+[`https://jump.dev/MathOptFormat/schemas/mof.1.3.schema.json`](https://jump.dev/MathOptFormat/schemas/mof.1.3.schema.json).
 
 It is intended for the schema to be self-documenting. Instead of modifying or
 adding to this documentation, clarifying edits should be made to the
 `description` field of the relevant part of the schema.
 
 A number of examples of optimization problems encoded using MathOptFormat are
-provided in the [`/examples` directory](https://github.com/odow/MathOptFormat/tree/master/examples).
+provided in the [`/examples` directory](https://github.com/jump-dev/MathOptFormat/tree/master/examples).
 
 A paper describing the motivation, design principles, and historical setting of
 MathOptFormat is available at:
 
-Legat, B., Dowson, O., Garcia, J.D., Lubin, M. (2020). MathOptInterface: a data
-structure for mathematical optimization problems.
-[[preprint]](http://www.optimization-online.org/DB_HTML/2020/02/7609.html)
-[[repository]](https://github.com/jump-dev/MathOptFormat)
-
-**We highly recommend you read that paper before reading further.**
+Legat, B., Dowson, O., Garcia, J., Lubin, M. (2022). MathOptInterface: a data
+structure for mathematical optimization problems. INFORMS Journal on Computing.
+34(2), 671--1304. [[preprint]](http://www.optimization-online.org/DB_HTML/2020/02/7609.html)
 
 ## Implementations
 
@@ -67,7 +64,7 @@ Encoded into the MathOptFormat file format, this example becomes:
 {
     "version": {
         "major": 1,
-        "minor": 2
+        "minor": 3
     },
     "variables": [{"name": "x"}],
     "objective": {
@@ -136,8 +133,8 @@ required keys at the top level:
       A `"ScalarAffineFunction"` is the function `f(x) = aᵀx + b`, where `a` is
       a constant `N×1` vector, and `b` is a scalar constant. In addition to
       `"type"`, it has two required keys:
-
-       - `"terms"`
+  
+      - "terms"
 
          A list of JSON objects, containing one object for each non-zero element
          in `a`. Each object has two required keys: `"coefficient"`, and
