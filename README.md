@@ -133,8 +133,8 @@ required keys at the top level:
       A `"ScalarAffineFunction"` is the function `f(x) = aᵀx + b`, where `a` is
       a constant `N×1` vector, and `b` is a scalar constant. In addition to
       `"type"`, it has two required keys:
-  
-      - "terms"
+
+      - `"terms"`
 
          A list of JSON objects, containing one object for each non-zero element
          in `a`. Each object has two required keys: `"coefficient"`, and
