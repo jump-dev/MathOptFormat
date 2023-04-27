@@ -222,6 +222,7 @@ Here is a summary of the sets defined by MathOptFormat.
 | `"Semicontinuous"` | {0} ∪ [lower, upper] | {"type": "Semicontinuous", "lower": 2.1, "upper": 3.4} |
 | `"ZeroOne"` | {0, 1} | {"type": "ZeroOne"} |
 | `"Integer"` | ℤ | {"type": "Integer"} |
+| `"Parameter"` | {value} | {"type": "Parameter", "value": 2.1} |
 
 #### Vector Sets
 
@@ -263,6 +264,9 @@ Here is a summary of the sets defined by MathOptFormat.
 | `"Cumulative"` | The set `{(s, d, r, b) in Z^{3n+1}}`, representing the `cumulative` global constraint, where `n == length(s) == length(r) == length(b)` and `dimension = 3n + 1`. `Cumulative` requires that a set of tasks given by start times `s`, durations `d`, and resource requirements `r`, never requires more than the global resource bound `b` at any one time. | {"type": "Cumulative", "dimension": 10} |
 | `"Path"` | Given a graph comprised of a set of nodes `1..N` and a set of arcs `1..E` represented by an edge from node `from[i]` to node `to[i]`, `Path` constrains the set `(s, t, ns, es) in (1..N)times(1..E)times{0,1}^Ntimes{0,1}^E`, to form subgraph that is a path from node `s` to node `t`, where node `n` is in the path if `ns[n]` is `1`, and edge `e` is in the path if `es[e]` is `1`. The path must be acyclic, and it must traverse all nodes `n` for which `ns[n]` is `1`, and all edges `e` for which `es[e]` is `1`. | {"type": "Path", "from": [1, 1, 2, 2, 3], "to": [2, 3, 3, 4, 4]} |
 | `"Table"` | The set `{x in R^d}` where `d = size(table, 2)`, such that `x` belongs to one row of `table`. That is, there exists some `j` in `1:size(table, 1)`, such that `x[i] = table[j, i]` for all `i=1:size(table, 2)`. | {"type": "Table", "table": [[1, 1, 0], [0, 1, 1]]} |
+| `"Reified"` | (z, f(x)) ∈ {R^{dimension}: z iff f(x) ∈ S} | {"type": "Reified", "set": {"type": "GreaterThan", "lower": 0}} |
+| `"HyperRectangle"` | x ∈ {R^d: x_i ∈ [lower_i, upper_i]} | {"type": "HyperRectangle", "lower": [0, 0], "upper": [1, 1]} |
+| `"HermitianPositiveSemidefiniteConeTriangle"` | The (vectorized) cone of Hermitian positive semidefinite matrices, with non-negative side_dimension rows and columns. | {"type": "HermitianPositiveSemidefiniteConeTriangle", "side_dimension": 3} |
 
 ### Nonlinear functions
 
