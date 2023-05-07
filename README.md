@@ -5,7 +5,7 @@ called _MathOptFormat_ with the file extension `.mof.json`.
 
 MathOptFormat is rigidly defined by the [JSON schema](http://json-schema.org/)
 available at
-[`https://jump.dev/MathOptFormat/schemas/mof.1.3.schema.json`](https://jump.dev/MathOptFormat/schemas/mof.1.3.schema.json).
+[`https://jump.dev/MathOptFormat/schemas/mof.1.4.schema.json`](https://jump.dev/MathOptFormat/schemas/mof.1.4.schema.json).
 
 It is intended for the schema to be self-documenting. Instead of modifying or
 adding to this documentation, clarifying edits should be made to the
@@ -64,7 +64,7 @@ Encoded into the MathOptFormat file format, this example becomes:
 {
     "version": {
         "major": 1,
-        "minor": 3
+        "minor": 4
     },
     "variables": [{"name": "x"}],
     "objective": {
@@ -241,13 +241,14 @@ Here is a summary of the sets defined by MathOptFormat.
 | `"LogDetConeTriangle"` | {[t, u, X] ∈ R^{2 + d(d+1)/2} : t ≤ u log(det(X/u)), u > 0}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeTriangle`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"type": "LogDetConeTriangle", "side_dimension": 2} |
 | `"LogDetConeSquare"` | {[t, u, X] ∈ R^{2 + d^2} : t ≤ u log(det(X/u)), X symmetric, u > 0}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeSquare`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"type": "LogDetConeSquare", "side_dimension": 2} |
 | `"PositiveSemidefiniteConeTriangle"` | The (vectorized) cone of symmetric positive semidefinite matrices, with `side_dimension` rows and columns. The entries of the upper-right triangular part of the matrix are given column by column (or equivalently, the entries of the lower-left triangular part are given row by row). | {"type": "PositiveSemidefiniteConeTriangle", "side_dimension": 2} |
+| `"ScaledPositiveSemidefiniteConeTriangle"` | The (vectorized) cone of symmetric positive semidefinite matrices, with `side_dimension` rows and columns, such that the off-diagonal entries are scaled by √2. The entries of the upper-right triangular part of the matrix are given column by column (or equivalently, the entries of the lower-left triangular part are given row by row). | {"type": "ScaledPositiveSemidefiniteConeTriangle", "side_dimension": 2} |
 | `"PositiveSemidefiniteConeSquare"` | The cone of symmetric positive semidefinite matrices, with side length `side_dimension`. The entries of the matrix are given column by column (or equivalently, row by row). The matrix is both constrained to be symmetric and to be positive semidefinite. That is, if the functions in entries `(i, j)` and `(j, i)` are different, then a constraint will be added to make sure that the entries are equal. | {"type": "PositiveSemidefiniteConeSquare", "side_dimension": 2} |
 | `"PowerCone"` | [x, y, z] ∈ {R³: x^{exponent} y^{1-exponent} ≥ \|z\|; x, y ≥ 0} | {"type": "PowerCone", "exponent": 2.0} |
 | `"DualPowerCone"` | [u, v, w] ∈ {R³: (u / exponent)^{exponent} (v / (1-exponent))^{1-exponent} ≥ \|w\|; u, v ≥ 0} | {"type": "DualPowerCone", "exponent": 2.0} |
 | `"Indicator"` | If `activate_on=one`: (y, x) ∈ {0,1}×Rᴺ: y = 0 ⟹ x ∈ S, otherwise when `activate_on=zero`: (y, x) ∈ {0,1}×Rᴺ: y = 1 ⟹ x ∈ S. | {"type": "Indicator", "set": {"type": "LessThan", "upper": 2.0}, "activate_on": "one"} |
 | `"NormOneCone"` | (t, x) ∈ {R^{dimension}: t ≥ Σᵢ\|xᵢ\|} | {"type": "NormOneCone", "dimension": 2} |
 | `"NormInfinityCone"` | (t, x) ∈ {R^{dimension}: t ≥ maxᵢ\|xᵢ\|} | {"type": "NormInfinityCone", "dimension": 2} |
-| `"RelativeEntropyCone"` | (u, v, w) ∈ {R^{dimension}: u ≥ sumᵢ wᵢlog(wᵢ/vᵢ), vᵢ ≥ 0, wᵢ ≥ 0} | {"type": "RelativeEntropyCone", "dimension": 3} |
+| `"RelativeEntropyCone"` | (u, v, w) ∈ {R^{dimension}: u ≥ Σᵢ wᵢlog(wᵢ/vᵢ), vᵢ ≥ 0, wᵢ ≥ 0} | {"type": "RelativeEntropyCone", "dimension": 3} |
 | `"NormSpectralCone"` | (t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ σ₁(X)} | {"type": "NormSpectralCone", "row_dim": 1, "column_dim": 2} |
 | `"NormNuclearCone"` | (t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ Σᵢ σᵢ(X)} | {"type": "NormNuclearCone", "row_dim": 1, "column_dim": 2} |
 | `"Complements"` | The set corresponding to a mixed complementarity constraint. Complementarity constraints should be specified with an AbstractVectorFunction-in-Complements(dimension) constraint. The dimension of the vector-valued function `F` must be `dimension`. This defines a complementarity constraint between the scalar function `F[i]` and the variable in `F[i + dimension/2]`. Thus, `F[i + dimension/2]` must be interpretable as a single variable `x_i` (e.g., `1.0 * x + 0.0`). The mixed complementarity problem consists of finding `x_i` in the interval `[lb, ub]` (i.e., in the set `Interval(lb, ub)`), such that the following holds: 1. `F_i(x) == 0` if `lb_i < x_i < ub_i`; 2. `F_i(x) >= 0` if `lb_i == x_i`; 3. `F_i(x) <= 0` if `x_i == ub_i`. Classically, the bounding set for `x_i` is `Interval(0, Inf)`, which recovers: `0 <= F_i(x) ⟂ x_i >= 0`, where the `⟂` operator implies `F_i(x) * x_i = 0`. | {"type": "Complements", "dimension": 2} |
@@ -264,6 +265,7 @@ Here is a summary of the sets defined by MathOptFormat.
 | `"Reified"` | (z, f(x)) ∈ {R^{dimension}: z iff f(x) ∈ S} | {"type": "Reified", "set": {"type": "GreaterThan", "lower": 0}} |
 | `"HyperRectangle"` | x ∈ {R^d: x_i ∈ [lower_i, upper_i]} | {"type": "HyperRectangle", "lower": [0, 0], "upper": [1, 1]} |
 | `"HermitianPositiveSemidefiniteConeTriangle"` | The (vectorized) cone of Hermitian positive semidefinite matrices, with non-negative side_dimension rows and columns. | {"type": "HermitianPositiveSemidefiniteConeTriangle", "side_dimension": 3} |
+| `"NormCone"` | The p-norm cone (t, x) ∈ {R^d : t ≥ (Σᵢ\|xᵢ\|^p)^(1/p)}. | {"type": "NormCone", "dimension": 3, "p": 1.5} |
 
 ### Nonlinear functions
 
