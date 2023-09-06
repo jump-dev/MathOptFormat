@@ -5,7 +5,7 @@ called _MathOptFormat_ with the file extension `.mof.json`.
 
 MathOptFormat is rigidly defined by the [JSON schema](http://json-schema.org/)
 available at
-[`https://jump.dev/MathOptFormat/schemas/mof.1.4.schema.json`](https://jump.dev/MathOptFormat/schemas/mof.1.4.schema.json).
+[`https://jump.dev/MathOptFormat/schemas/mof.1.5.schema.json`](https://jump.dev/MathOptFormat/schemas/mof.1.5.schema.json).
 
 It is intended for the schema to be self-documenting. Instead of modifying or
 adding to this documentation, clarifying edits should be made to the
@@ -266,6 +266,7 @@ Here is a summary of the sets defined by MathOptFormat.
 | `"HyperRectangle"` | x ∈ {R^d: x_i ∈ [lower_i, upper_i]} | {"type": "HyperRectangle", "lower": [0, 0], "upper": [1, 1]} |
 | `"HermitianPositiveSemidefiniteConeTriangle"` | The (vectorized) cone of Hermitian positive semidefinite matrices, with non-negative side_dimension rows and columns. | {"type": "HermitianPositiveSemidefiniteConeTriangle", "side_dimension": 3} |
 | `"NormCone"` | The p-norm cone (t, x) ∈ {R^d : t ≥ (Σᵢ\|xᵢ\|^p)^(1/p)}. | {"type": "NormCone", "dimension": 3, "p": 1.5} |
+| `"Scaled"` | The set in the `set` field, scaled such that the inner product of two elements in the set is the same as the dot product of the two vector functions. This is most useful for solvers which require PSD matrices in _scaled_ form. | {"type": "Scaled", "set": {"type": "PositiveSemidefiniteConeTriangle", "side_dimension": 2}} |
 
 ### Nonlinear functions
 
