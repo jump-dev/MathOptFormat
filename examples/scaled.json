@@ -1,0 +1,18 @@
+{
+    "version": {"major": 1, "minor": 5},
+    "variables": [{"name": "x"}, {"name": "y"}, {"name": "z"}],
+    "objective": {"sense": "feasibility"},
+    "constraints": [{
+        "function": {
+            "type": "VectorOfVariables",
+            "variables": ["x", "y", "z"]
+        },
+        "set": {
+            "type": "Scaled", 
+            "set": {
+                "type": "PositiveSemidefiniteConeTriangle", 
+                "side_dimension": 2
+            }
+        }
+    }]
+}
