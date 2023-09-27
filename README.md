@@ -197,6 +197,7 @@ For more information on `"ScalarNonlinearFunction"` functions, see
 | `"VectorOfVariables"` | An ordered list of variables. | {"type": "VectorOfVariables", "variables": ["x", "y"]} |
 | `"VectorAffineFunction"` | The function `Ax + b`, where `A` is a sparse matrix specified by a list of `VectorAffineTerm`s in `terms` and `b` is a dense vector specified by `constants`. | {"type": "VectorAffineFunction", "constants": [1.0], "terms": [{"output_index": 1, "scalar_term": {"coefficient": 2.5, "variable": "x"}}]} |
 | `"VectorQuadraticFunction"` | The vector-valued quadratic function `q(x) + Ax + b`, where `q(x)` is specified by a list of `VectorQuadraticTerm`s in `quadratic_terms`, `A` is a sparse matrix specified by a list of `VectorAffineTerm`s in `affine_terms` and `b` is a dense vector specified by `constants`. |  |
+| `"VectorNonlinearFunction"` | The vector-valued nonlinear function `f(x)`, comprised of a vector of `ScalarNonlinearFunction`. |  |
 
 ### List of supported sets
 
