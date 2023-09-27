@@ -435,6 +435,13 @@ and their corresponding arity.
 | `"/"` | Binary |
 | `"^"` | Binary |
 | `"atan"` | Binary |
+| `"&&"` | Binary |
+| `"||"` | Binary |
+| `"<="` | Binary |
+| `"<"` | Binary |
+| `">="` | Binary |
+| `">"` | Binary |
+| `"=="` | Binary |
 | `"+"` | N-ary |
 | `"-"` | N-ary |
 | `"*"` | N-ary |
