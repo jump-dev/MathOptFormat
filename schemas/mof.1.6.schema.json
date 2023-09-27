@@ -287,7 +287,18 @@
                 "required": ["args"],
                 "properties": {
                     "type": {
-                        "enum": ["/", "^", "atan"]
+                        "enum": [
+                            "/",
+                            "^",
+                            "atan",
+                            "&&",
+                            "||",
+                            "<=",
+                            "<",
+                            ">=",
+                            ">",
+                            "=="
+                        ]
                     },
                     "args": {
                         "type": "array",
