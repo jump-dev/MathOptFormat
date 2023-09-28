@@ -290,11 +290,11 @@ Leaf nodes in the expression graph are data: they can either reference
 optimization variables, or be real or complex valued numeric constants. They are
 described as follows.
 
-| Head | Description | Example |
+| Type | Description | Example |
 | ---- | ----------- | ------- |
-| `"real"` | A real-valued numeric constant | {"type": "real", "value": 1.0} |
-| `"complex"` | A complex-valued numeric constant | {"type": "complex", "real": 1.0, "imag": 2.0} |
-| `"variable"` | A reference to an optimization variable | {"type": "variable", "name": "x"} |
+| `number` | A real-valued numeric constant | 1.0 |
+| `string` | A reference to an optimization variable | "x" |
+| `{"type": "complex"}` | A complex-valued numeric constant | {"type": "complex", "real": 1.0, "imag": 2.0} |
 
 Nodes in the flattened list `"node_list"` can be referenced by an object with
 the `"type"` field `"node"` and a field `"index"` that is the one-based index of
@@ -306,17 +306,15 @@ the node in `"node_list"`.
 
 #### Operators
 
-All nonlinear operators in MathOptFormat are described by a JSON object with two fields:
+All nonlinear operators in MathOptFormat are described by a JSON object with two
+fields:
 
- - `"type"`
+ - `"type"`: A string that corresponds to the operator.
+ - `"args"`: An ordered list of nodes that are passed as arguments to the
+   operator.
 
-   A string that corresponds to the operator.
-
- - `"args"`
-
-   An ordered list of nodes that are passed as arguments to the operator.
-
-The number of elements in `"args"` depends on the arity of the operator. MathOptFormat distinguishes between three arities:
+The number of elements in `"args"` depends on the arity of the operator.
+MathOptFormat distinguishes between three arities:
 
  - Unary operators take one argument
  - Binary operators take two arguments
@@ -324,130 +322,25 @@ The number of elements in `"args"` depends on the arity of the operator. MathOpt
 
 To give some examples, the unary function `log(x)` is encoded as:
 ```json
-{
-  "type": "log",
-  "args": [
-    {"type": "variable", "name": "x"}
-  ]
-}
+{"type": "log", "args": ["x"]}
 ```
 The binary function `x^2` (i.e., `^(x, 2)`) is encoded as:
 ```json
-{
-  "type": "^",
-  "args": [
-    {"type": "variable", "name": "x"},
-    {"type": "real", "value": 2}
-  ]
-}
+{"type": "^", "args": ["x", 2]}
 ```
 The n-ary function `x + y + 1` (i.e., `+(x, y, 1)`) is encoded as:
 ```json
-{
-  "type": "+",
-  "args": [
-    {"type": "variable", "name": "x"},
-    {"type": "variable", "name": "y"},
-    {"type": "real", "value": 1}
-  ]
-}
+{"type": "+", "args": ["x", "y", 1.0]}
 ```
 
 Here is a complete list of the nonlinear operators supported by MathOptFormat
 and their corresponding arity.
 
-| Name | Arity |
-| ---- | ----- |
-| `"+"` | Unary |
-| `"-"` | Unary |
-| `"abs"` | Unary |
-| `"sqrt"` | Unary |
-| `"cbrt"` | Unary |
-| `"abs2"` | Unary |
-| `"inv"` | Unary |
-| `"log"` | Unary |
-| `"log10"` | Unary |
-| `"log2"` | Unary |
-| `"log1p"` | Unary |
-| `"exp"` | Unary |
-| `"exp2"` | Unary |
-| `"expm1"` | Unary |
-| `"sin"` | Unary |
-| `"cos"` | Unary |
-| `"tan"` | Unary |
-| `"sec"` | Unary |
-| `"csc"` | Unary |
-| `"cot"` | Unary |
-| `"sind"` | Unary |
-| `"cosd"` | Unary |
-| `"tand"` | Unary |
-| `"secd"` | Unary |
-| `"cscd"` | Unary |
-| `"cotd"` | Unary |
-| `"asin"` | Unary |
-| `"acos"` | Unary |
-| `"atan"` | Unary |
-| `"asec"` | Unary |
-| `"acsc"` | Unary |
-| `"acot"` | Unary |
-| `"asind"` | Unary |
-| `"acosd"` | Unary |
-| `"atand"` | Unary |
-| `"asecd"` | Unary |
-| `"acscd"` | Unary |
-| `"acotd"` | Unary |
-| `"sinh"` | Unary |
-| `"cosh"` | Unary |
-| `"tanh"` | Unary |
-| `"sech"` | Unary |
-| `"csch"` | Unary |
-| `"coth"` | Unary |
-| `"asinh"` | Unary |
-| `"acosh"` | Unary |
-| `"atanh"` | Unary |
-| `"asech"` | Unary |
-| `"acsch"` | Unary |
-| `"acoth"` | Unary |
-| `"deg2rad"` | Unary |
-| `"rad2deg"` | Unary |
-| `"erf"` | Unary |
-| `"erfinv"` | Unary |
-| `"erfc"` | Unary |
-| `"erfcinv"` | Unary |
-| `"erfi"` | Unary |
-| `"gamma"` | Unary |
-| `"lgamma"` | Unary |
-| `"digamma"` | Unary |
-| `"invdigamma"` | Unary |
-| `"trigamma"` | Unary |
-| `"airyai"` | Unary |
-| `"airybi"` | Unary |
-| `"airyaiprime"` | Unary |
-| `"airybiprime"` | Unary |
-| `"besselj0"` | Unary |
-| `"besselj1"` | Unary |
-| `"bessely0"` | Unary |
-| `"bessely1"` | Unary |
-| `"erfcx"` | Unary |
-| `"dawson"` | Unary |
-| `"floor"` | Unary |
-| `"ceil"` | Unary |
-| `"/"` | Binary |
-| `"^"` | Binary |
-| `"atan"` | Binary |
-| `"&&"` | Binary |
-| `"||"` | Binary |
-| `"<="` | Binary |
-| `"<"` | Binary |
-| `">="` | Binary |
-| `">"` | Binary |
-| `"=="` | Binary |
-| `"+"` | N-ary |
-| `"-"` | N-ary |
-| `"*"` | N-ary |
-| `"ifelse"` | N-ary |
-| `"min"` | N-ary |
-| `"max"` | N-ary |
+| Arity | Operators |
+| ----- | --------- |
+| Unary | `"abs"`, `"sqrt"`, `"cbrt"`, `"abs2"`, `"inv"`, `"log"`, `"log10"`, `"log2"`, `"log1p"`, `"exp"`, `"exp2"`, `"expm1"`, `"sin"`, `"cos"`, `"tan"`, `"sec"`, `"csc"`, `"cot"`, `"sind"`, `"cosd"`, `"tand"`, `"secd"`, `"cscd"`, `"cotd"`, `"asin"`, `"acos"`, `"atan"`, `"asec"`, `"acsc"`, `"acot"`, `"asind"`, `"acosd"`, `"atand"`, `"asecd"`, `"acscd"`, `"acotd"`, `"sinh"`, `"cosh"`, `"tanh"`, `"sech"`, `"csch"`, `"coth"`, `"asinh"`, `"acosh"`, `"atanh"`, `"asech"`, `"acsch"`, `"acoth"`, `"deg2rad"`, `"rad2deg"`, `"erf"`, `"erfinv"`, `"erfc"`, `"erfcinv"`, `"erfi"`, `"gamma"`, `"lgamma"`, `"digamma"`, `"invdigamma"`, `"trigamma"`, `"airyai"`, `"airybi"`, `"airyaiprime"`, `"airybiprime"`, `"besselj0"`, `"besselj1"`, `"bessely0"`, `"bessely1"`, `"erfcx"`, `"dawson"`, `"floor"`, `"ceil"` |
+| Binary | `"/"`, `"^"`, `"atan"`, `"&&"`, `"\|\|"`, `"<="`, `"<"`, `">="`, `">"`, `"=="` |
+| N-ary  | `"+"`, `"-"`, `"*"`, `"ifelse"`, `"min"`, `"max"` |
 
 #### Example
 
@@ -462,31 +355,15 @@ In MathOptFormat, this expression graph can be encoded as follows:
   "type": "ScalarNonlinearFunction",
   "root": {
     "type": "+",
-    "args": [
-      {"type": "node", "index": 1},
-      {"type": "node", "index": 3},
-      {"type": "variable", "name": "y"}
-    ]
+    "args": [{"type": "node", "index": 1}, {"type": "node", "index": 3}, "y"]
   },
-  "node_list": [
-    {
-      "type": "*",
-      "args": [
-        {"type": "complex", "real": 1, "imag": 3},
-        {"type": "variable", "name": "x"}
-      ]
-    }, {
-      "type": "sin",
-      "args": [
-        {"type": "variable", "name": "x"}
-      ]
-    }, {
-      "type": "^",
-      "args": [
-        {"type": "node", "index": 2},
-        {"type": "real", "value": 2}
-      ]
-    }
-  ]
+  "node_list": [{
+    "type": "*",
+    "args": [{"type": "complex", "real": 1, "imag": 3}, "x"]
+  }, {
+    "type": "sin", "args": ["x"]
+  }, {
+    "type": "^", "args": [{"type": "node", "index": 2}, 2]
+  }]
 }
 ```

@@ -1,58 +1,31 @@
 {
     "description": "The problem: min{2x + sin(x)^2 + y}.",
-    "version": {
-        "major": 1,
-        "minor": 1
-    },
-    "variables": [{
-        "name": "x"
-    }, {
-        "name": "y"
-    }],
+    "version": {"major": 1, "minor": 7},
+    "variables": [{"name": "x"}, {"name": "y"}],
     "objective": {
         "sense": "min",
         "function": {
             "type": "ScalarNonlinearFunction",
-            "root": {
-                "type": "node",
-                "index": 4
-            },
+            "root": {"type": "node", "index": 4},
             "node_list": [{
                 "type": "*",
-                "args": [{
-                    "type": "real",
-                    "value": 2
-                }, {
-                    "type": "variable",
-                    "name": "x"
-                }]
+                "args": [
+                    {"type": "real", "value": 2}, 
+                    {"type": "variable", "name": "x"}
+                ]
             }, {
                 "type": "sin",
-                "args": [{
-                    "type": "variable",
-                    "name": "x"
-                }]
+                "args": ["x"]
             }, {
                 "type": "^",
-                "args": [{
-                    "type": "node",
-                    "index": 2
-                }, {
-                    "type": "real",
-                    "value": 2
-                }]
+                "args": [{"type": "node", "index": 2}, 2.0]
             }, {
                 "type": "+",
-                "args": [{
-                    "type": "node",
-                    "index": 1
-                }, {
-                    "type": "node",
-                    "index": 3
-                }, {
-                    "type": "variable",
-                    "name": "y"
-                }]
+                "args": [
+                    {"type": "node", "index": 1},
+                    {"type": "node", "index": 3},
+                    "y"
+                ]
             }]
         }
     },

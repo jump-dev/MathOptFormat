@@ -28,6 +28,13 @@ def summarize_schema():
     return summary
 
 def oneOf_to_object(item):
+    if "properties" not in item:
+        print(item)
+        return [{
+            "name": None,
+            "description": item["description"],
+            "example": item["examples"][0],
+        }]
     head = item["properties"]["type"]
     ret = []
     if "const" in head:
