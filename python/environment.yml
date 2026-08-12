@@ -1,0 +1,6 @@
+name: mathoptformat
+dependencies:
+  - python=3.10
+  - jsonschema=4.26.0
+  - pulp=3.3.2
+  - pytest=9.1.1
