@@ -228,33 +228,38 @@ Here is a summary of the sets defined by MathOptFormat.
 
 | Name | Description | Example |
 | ---- | ----------- | ------- |
-| `"ExponentialCone"` | [x, y, z] ∈ {R³: y * exp(x / y) ≤ z, y ≥ 0} | {"type": "ExponentialCone"} |
-| `"DualExponentialCone"` | [u, v, w] ∈ {R³: -u * exp(v / u) ≤ exp(1) * w, u < 0} | {"type": "DualExponentialCone"} |
-| `"SOS1"` | A special ordered set of type I. | {"type": "SOS1", "weights": [1, 3, 2]} |
-| `"SOS2"` | A special ordered set of type II. | {"type": "SOS2", "weights": [1, 3, 2]} |
-| `"GeometricMeanCone"` | [t, x] ∈ {R^{dimension}: t ≤ (Πxᵢ)^{1 / (dimension-1)}} | {"type": "GeometricMeanCone", "dimension": 3} |
-| `"SecondOrderCone"` | [t, x] ∈ {R^{dimension} : t ≥ \|\|x\|\|₂ | {"type": "SecondOrderCone", "dimension": 3} |
-| `"RotatedSecondOrderCone"` | [t, u, x] ∈ {R^{dimension} : 2tu ≥ (\|\|x\|\|₂)²; t, u ≥ 0} | {"type": "RotatedSecondOrderCone", "dimension": 3} |
-| `"Zeros"` | {0}^{dimension} | {"type": "Zeros", "dimension": 3} |
 | `"Reals"` | R^{dimension} | {"type": "Reals", "dimension": 3} |
+| `"Zeros"` | {0}^{dimension} | {"type": "Zeros", "dimension": 3} |
 | `"Nonpositives"` | R₋^{dimension} | {"type": "Nonpositives", "dimension": 3} |
 | `"Nonnegatives"` | R₊^{dimension} | {"type": "Nonnegatives", "dimension": 3} |
+| `"HyperRectangle"` | x ∈ {R^d: x_i ∈ [lower_i, upper_i]} | {"type": "HyperRectangle", "lower": [0, 0], "upper": [1, 1]} |
+| `"SecondOrderCone"` | [t, x] ∈ {R^{dimension} : t ≥ \|\|x\|\|₂} | {"type": "SecondOrderCone", "dimension": 3} |
+| `"RotatedSecondOrderCone"` | [t, u, x] ∈ {R^{dimension} : 2tu ≥ (\|\|x\|\|₂)²; t, u ≥ 0} | {"type": "RotatedSecondOrderCone", "dimension": 3} |
+| `"ExponentialCone"` | [x, y, z] ∈ {R³: y * exp(x / y) ≤ z, y ≥ 0} | {"type": "ExponentialCone"} |
+| `"DualExponentialCone"` | [u, v, w] ∈ {R³: -u * exp(v / u) ≤ exp(1) * w, u < 0} | {"type": "DualExponentialCone"} |
+| `"PowerCone"` | [x, y, z] ∈ {R³: x^{exponent} y^{1-exponent} ≥ \|z\|; x, y ≥ 0} | {"type": "PowerCone", "exponent": 2.0} |
+| `"DualPowerCone"` | [u, v, w] ∈ {R³: (u / exponent)^{exponent} (v / (1-exponent))^{1-exponent} ≥ \|w\|; u, v ≥ 0} | {"type": "DualPowerCone", "exponent": 2.0} |
+| `"PositiveSemidefiniteConeTriangle"` | The (vectorized) cone of symmetric positive semidefinite matrices, with `side_dimension` rows and columns. The entries of the upper-right triangular part of the matrix are given column by column (or equivalently, the entries of the lower-left triangular part are given row by row). | {"type": "PositiveSemidefiniteConeTriangle", "side_dimension": 2} |
+| `"PositiveSemidefiniteConeSquare"` | The cone of symmetric positive semidefinite matrices, with side length `side_dimension`. The entries of the matrix are given column by column (or equivalently, row by row). The matrix is both constrained to be symmetric and to be positive semidefinite. That is, if the functions in entries `(i, j)` and `(j, i)` are different, then a constraint will be added to make sure that the entries are equal. | {"type": "PositiveSemidefiniteConeSquare", "side_dimension": 2} |
+| `"Scaled"` | The set in the `set` field, scaled such that the inner product of two elements in the set is the same as the dot product of the two vector functions. This is most useful for solvers which require PSD matrices in _scaled_ form. | {"type": "Scaled", "set": {"type": "PositiveSemidefiniteConeTriangle", "side_dimension": 2}} |
 | `"RootDetConeTriangle"` | {[t, X] ∈ R^{1 + d(d+1)/2} : t ≤ det(X)^{1/d}}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeTriangle`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"type": "RootDetConeTriangle", "side_dimension": 2} |
 | `"RootDetConeSquare"` | {[t, X] ∈ R^{1 + d^2} : t ≤ det(X)^{1/d}, X symmetric}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeSquare`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"type": "RootDetConeSquare", "side_dimension": 2} |
 | `"LogDetConeTriangle"` | {[t, u, X] ∈ R^{2 + d(d+1)/2} : t ≤ u log(det(X/u)), u > 0}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeTriangle`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"type": "LogDetConeTriangle", "side_dimension": 2} |
 | `"LogDetConeSquare"` | {[t, u, X] ∈ R^{2 + d^2} : t ≤ u log(det(X/u)), X symmetric, u > 0}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeSquare`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"type": "LogDetConeSquare", "side_dimension": 2} |
-| `"PositiveSemidefiniteConeTriangle"` | The (vectorized) cone of symmetric positive semidefinite matrices, with `side_dimension` rows and columns. The entries of the upper-right triangular part of the matrix are given column by column (or equivalently, the entries of the lower-left triangular part are given row by row). | {"type": "PositiveSemidefiniteConeTriangle", "side_dimension": 2} |
-| `"ScaledPositiveSemidefiniteConeTriangle"` | The (vectorized) cone of symmetric positive semidefinite matrices, with `side_dimension` rows and columns, such that the off-diagonal entries are scaled by √2. The entries of the upper-right triangular part of the matrix are given column by column (or equivalently, the entries of the lower-left triangular part are given row by row). | {"type": "ScaledPositiveSemidefiniteConeTriangle", "side_dimension": 2} |
-| `"PositiveSemidefiniteConeSquare"` | The cone of symmetric positive semidefinite matrices, with side length `side_dimension`. The entries of the matrix are given column by column (or equivalently, row by row). The matrix is both constrained to be symmetric and to be positive semidefinite. That is, if the functions in entries `(i, j)` and `(j, i)` are different, then a constraint will be added to make sure that the entries are equal. | {"type": "PositiveSemidefiniteConeSquare", "side_dimension": 2} |
-| `"PowerCone"` | [x, y, z] ∈ {R³: x^{exponent} y^{1-exponent} ≥ \|z\|; x, y ≥ 0} | {"type": "PowerCone", "exponent": 2.0} |
-| `"DualPowerCone"` | [u, v, w] ∈ {R³: (u / exponent)^{exponent} (v / (1-exponent))^{1-exponent} ≥ \|w\|; u, v ≥ 0} | {"type": "DualPowerCone", "exponent": 2.0} |
-| `"Indicator"` | If `activate_on=one`: (y, x) ∈ {0,1}×Rᴺ: y = 0 ⟹ x ∈ S, otherwise when `activate_on=zero`: (y, x) ∈ {0,1}×Rᴺ: y = 1 ⟹ x ∈ S. | {"type": "Indicator", "set": {"type": "LessThan", "upper": 2.0}, "activate_on": "one"} |
+| `"ScaledPositiveSemidefiniteConeTriangle"` | DEPRECATED: use the Scaled set combinned with PositiveSemidefiniteConeTriangle instead. |  |
+| `"HermitianPositiveSemidefiniteConeTriangle"` | The (vectorized) cone of Hermitian positive semidefinite matrices, with non-negative side_dimension rows and columns. | {"type": "HermitianPositiveSemidefiniteConeTriangle", "side_dimension": 3} |
+| `"NormCone"` | The p-norm cone (t, x) ∈ {R^d : t ≥ (Σᵢ\|xᵢ\|^p)^(1/p)}. | {"type": "NormCone", "dimension": 3, "p": 1.5} |
 | `"NormOneCone"` | (t, x) ∈ {R^{dimension}: t ≥ Σᵢ\|xᵢ\|} | {"type": "NormOneCone", "dimension": 2} |
 | `"NormInfinityCone"` | (t, x) ∈ {R^{dimension}: t ≥ maxᵢ\|xᵢ\|} | {"type": "NormInfinityCone", "dimension": 2} |
+| `"GeometricMeanCone"` | [t, x] ∈ {R^{dimension}: x ≥ 0, t ≤ (Πxᵢ)^{1 / (dimension-1)}} | {"type": "GeometricMeanCone", "dimension": 3} |
+| `"DualGeometricMeanCone"` | [u, v] ∈ {R^{dimension}: v ≥ 0, 0 ≥ u ≥ -n * (Πvᵢ)^{1 / (dimension-1)}} | {"type": "DualGeometricMeanCone", "dimension": 3} |
 | `"RelativeEntropyCone"` | (u, v, w) ∈ {R^{dimension}: u ≥ Σᵢ wᵢlog(wᵢ/vᵢ), vᵢ ≥ 0, wᵢ ≥ 0} | {"type": "RelativeEntropyCone", "dimension": 3} |
 | `"NormSpectralCone"` | (t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ σ₁(X)} | {"type": "NormSpectralCone", "row_dim": 1, "column_dim": 2} |
 | `"NormNuclearCone"` | (t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ Σᵢ σᵢ(X)} | {"type": "NormNuclearCone", "row_dim": 1, "column_dim": 2} |
 | `"Complements"` | The set corresponding to a mixed complementarity constraint. Complementarity constraints should be specified with an AbstractVectorFunction-in-Complements(dimension) constraint. The dimension of the vector-valued function `F` must be `dimension`. This defines a complementarity constraint between the scalar function `F[i]` and the variable in `F[i + dimension/2]`. Thus, `F[i + dimension/2]` must be interpretable as a single variable `x_i` (e.g., `1.0 * x + 0.0`). The mixed complementarity problem consists of finding `x_i` in the interval `[lb, ub]` (i.e., in the set `Interval(lb, ub)`), such that the following holds: 1. `F_i(x) == 0` if `lb_i < x_i < ub_i`; 2. `F_i(x) >= 0` if `lb_i == x_i`; 3. `F_i(x) <= 0` if `x_i == ub_i`. Classically, the bounding set for `x_i` is `Interval(0, Inf)`, which recovers: `0 <= F_i(x) ⟂ x_i >= 0`, where the `⟂` operator implies `F_i(x) * x_i = 0`. | {"type": "Complements", "dimension": 2} |
+| `"SOS1"` | A special ordered set of type I. | {"type": "SOS1", "weights": [1, 3, 2]} |
+| `"SOS2"` | A special ordered set of type II. | {"type": "SOS2", "weights": [1, 3, 2]} |
+| `"Indicator"` | If `activate_on=one`: (y, x) ∈ {0,1}×Rᴺ: y = 0 ⟹ x ∈ S, otherwise when `activate_on=zero`: (y, x) ∈ {0,1}×Rᴺ: y = 1 ⟹ x ∈ S. | {"type": "Indicator", "set": {"type": "LessThan", "upper": 2.0}, "activate_on": "one"} |
 | `"AllDifferent"` | The set {x in Z^d} such that no two elements in x take the same value and dimension=d. | {"type": "AllDifferent", "dimension": 2} |
 | `"BinPacking"` | The set `{x in Z^d}` where `d = length(w)`, such that each item `i` in `1:d` of weight `w[i]` is put into bin `x[i]`, and the total weight of each bin does not exceed `c`. | {"type": "BinPacking", "capacity": 3.0, "weights": [1.0, 2.0, 3.0]} |
 | `"Circuit"` | The set `{x in {1..d}^d}` that constraints `x` to be a circuit, such that `x_i = j` means that `j` is the successor of `i`, and `dimension = d`. | {"type": "Circuit", "dimension": 3} |
@@ -266,10 +271,6 @@ Here is a summary of the sets defined by MathOptFormat.
 | `"Path"` | Given a graph comprised of a set of nodes `1..N` and a set of arcs `1..E` represented by an edge from node `from[i]` to node `to[i]`, `Path` constrains the set `(s, t, ns, es) in (1..N)times(1..E)times{0,1}^Ntimes{0,1}^E`, to form subgraph that is a path from node `s` to node `t`, where node `n` is in the path if `ns[n]` is `1`, and edge `e` is in the path if `es[e]` is `1`. The path must be acyclic, and it must traverse all nodes `n` for which `ns[n]` is `1`, and all edges `e` for which `es[e]` is `1`. | {"type": "Path", "from": [1, 1, 2, 2, 3], "to": [2, 3, 3, 4, 4]} |
 | `"Table"` | The set `{x in R^d}` where `d = size(table, 2)`, such that `x` belongs to one row of `table`. That is, there exists some `j` in `1:size(table, 1)`, such that `x[i] = table[j, i]` for all `i=1:size(table, 2)`. | {"type": "Table", "table": [[1, 1, 0], [0, 1, 1]]} |
 | `"Reified"` | (z, f(x)) ∈ {R^{dimension}: z iff f(x) ∈ S} | {"type": "Reified", "set": {"type": "GreaterThan", "lower": 0}} |
-| `"HyperRectangle"` | x ∈ {R^d: x_i ∈ [lower_i, upper_i]} | {"type": "HyperRectangle", "lower": [0, 0], "upper": [1, 1]} |
-| `"HermitianPositiveSemidefiniteConeTriangle"` | The (vectorized) cone of Hermitian positive semidefinite matrices, with non-negative side_dimension rows and columns. | {"type": "HermitianPositiveSemidefiniteConeTriangle", "side_dimension": 3} |
-| `"NormCone"` | The p-norm cone (t, x) ∈ {R^d : t ≥ (Σᵢ\|xᵢ\|^p)^(1/p)}. | {"type": "NormCone", "dimension": 3, "p": 1.5} |
-| `"Scaled"` | The set in the `set` field, scaled such that the inner product of two elements in the set is the same as the dot product of the two vector functions. This is most useful for solvers which require PSD matrices in _scaled_ form. | {"type": "Scaled", "set": {"type": "PositiveSemidefiniteConeTriangle", "side_dimension": 2}} |
 
 ### Nonlinear functions
 

@@ -1,0 +1,206 @@
+{
+    "version": {"major": 1, "minor": 8},
+    "variables": [
+        {"name": "p"},
+        {"name": "t"},
+        {"name": "u"},
+        {"name": "v"},
+        {"name": "w"},
+        {"name": "x"},
+        {"name": "y"},
+        {"name": "z"}
+],
+    "objective": {"sense": "feasibility"},
+    "constraints": [{
+        "function": {"type": "Variable", "name": "x"},
+        "set": {"type": "LessThan", "upper": 1.0}
+    }, {
+        "function": {"type": "Variable", "name": "x"},
+        "set": {"type": "GreaterThan", "lower": 0.0}
+    }, {
+        "function": {"type": "Variable", "name": "y"},
+        "set": {"type": "EqualTo", "value": 0.0}
+    }, {
+        "function": {"type": "Variable", "name": "z"},
+        "set": {"type": "Interval", "lower": -1.0, "upper": 0.0}
+    }, {
+        "function": {"type": "Variable", "name": "u"},
+        "set": {"type": "Semicontinuous", "lower": 1.5, "upper": 3.3}
+    }, {
+        "function": {"type": "Variable", "name": "v"},
+        "set": {"type": "Semiinteger", "lower": 1.0, "upper": 5.0}
+    }, {
+        "function": {
+            "type": "ScalarQuadraticFunction",
+            "quadratic_terms": [
+                {"coefficient": -2.0, "variable_1": "x", "variable_2": "x"}
+            ],
+            "affine_terms": [{"coefficient": 2.0, "variable": "x"}],
+            "constant": 0.0
+        },
+        "set": {"type": "ZeroOne"}
+    }, {
+        "function": {
+            "type": "ScalarAffineFunction",
+            "terms": [{"coefficient": 2.0, "variable": "x"}],
+            "constant": 0.5
+        },
+        "set": {"type": "Integer"}
+    }, {
+        "function": {"type": "Variable", "name": "p"},
+        "set": {"type": "Parameter", "value": 1.0}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["x"]},
+        "set": {"type": "Reals", "dimension": 1}
+    }, {
+        "function": {
+            "type": "VectorAffineFunction",
+            "terms": [{
+                "output_index": 1,
+                "scalar_term": {"coefficient": 2.5, "variable": "x"}
+            }],
+            "constants": [1.0]
+        },
+        "set": {"type": "Zeros", "dimension": 1}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["x"]},
+        "set": {"type": "Nonnegatives", "dimension": 1}
+    }, {
+        "function": {
+            "type": "VectorQuadraticFunction",
+            "quadratic_terms": [{
+                "output_index": 1,
+                "scalar_term": {"coefficient": 2, "variable_1": "x", "variable_2": "x"}
+            }],
+            "affine_terms": [{
+                "output_index": 1,
+                "scalar_term": {"coefficient": 2.5, "variable": "y"}
+            }],
+            "constants": [-5.0]
+        },
+        "set": {"type": "Nonpositives", "dimension": 1}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["x"]},
+        "set": {"type": "HyperRectangle", "lower": [0.0], "upper": [1.0]}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "x", "y"]},
+        "set": {"type": "SecondOrderCone", "dimension": 3}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "x", "y"]},
+        "set": {"type": "RotatedSecondOrderCone", "dimension": 3}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["u", "v", "w"]},
+        "set": {"type": "ExponentialCone"}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["u", "v", "w"]},
+        "set": {"type": "DualExponentialCone"}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["x", "y", "z"]},
+        "set": {"type": "PowerCone", "exponent": 2.0}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["u", "v", "w"]},
+        "set": {"type": "DualPowerCone", "exponent": 2.0}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["u", "v", "w"]},
+        "set": {"type": "PositiveSemidefiniteConeTriangle", "side_dimension": 2}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {"type": "PositiveSemidefiniteConeSquare", "side_dimension": 2}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {
+            "type": "Scaled",
+            "set": {"type": "PositiveSemidefiniteConeSquare", "side_dimension": 2}
+        }
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {"type": "RootDetConeTriangle", "side_dimension": 2}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w", "x"]},
+        "set": {"type": "RootDetConeSquare", "side_dimension": 2}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w", "x"]},
+        "set": {"type": "LogDetConeTriangle", "side_dimension": 2}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w", "x", "y"]},
+        "set": {"type": "LogDetConeSquare", "side_dimension": 2}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["w", "x", "y"]},
+        "set": {"type": "ScaledPositiveSemidefiniteConeTriangle", "side_dimension": 2}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["w", "x", "y", "z"]},
+        "set": {"type": "HermitianPositiveSemidefiniteConeTriangle", "side_dimension": 2}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {"type": "NormCone", "dimension": 4, "p": 1.5}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {"type": "NormOneCone", "dimension": 4}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {"type": "NormInfinityCone", "dimension": 4}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {"type": "GeometricMeanCone", "dimension": 4}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {"type": "DualGeometricMeanCone", "dimension": 4}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["u", "v", "w"]},
+        "set": {"type": "RelativeEntropyCone", "dimension": 3}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "v", "w"]},
+        "set": {"type": "NormSpectralCone", "row_dim": 1, "column_dim": 2}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "v", "w"]},
+        "set": {"type": "NormNuclearCone", "row_dim": 1, "column_dim": 2}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "x"]},
+        "set": {"type": "Complements", "dimension": 2}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {"type": "SOS1", "weights": [1, 2, 3, 4]}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {"type": "SOS2", "weights": [1, 2, 3, 4]}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "x"]},
+        "set": {
+            "type": "Indicator",
+            "activate_on": "one",
+            "set": {"type": "EqualTo", "value": 1.0}
+        }
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "x"]},
+        "set": {
+            "type": "Reified",
+            "set": {"type": "EqualTo", "value": 1.0}
+        }
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {"type": "AllDifferent", "dimension": 4}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {"type": "BinPacking", "capacity": 6.0, "weights": [1, 2, 3, 4]}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {"type": "Circuit", "dimension": 4}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {"type": "CountAtLeast", "n": 1, "partitions": [2, 2], "set": [3.0]}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {"type": "CountBelongs", "dimension": 4, "set": [3.0]}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {"type": "CountDistinct", "dimension": 4}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["t", "u", "v", "w"]},
+        "set": {"type": "CountGreaterThan", "dimension": 4}
+    }, {
+        "function": {"type": "VectorOfVariables", "variables": ["x", "y", "z"]},
+        "set": {"type": "Table", "table": [[1, 1, 0], [0, 1, 1]]}
+    }
+
+]
+}
