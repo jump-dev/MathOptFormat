@@ -1,7 +1,8 @@
 # MathOptFormat
 
-This repository describes a file-format for mathematical optimization problems
-called _MathOptFormat_ with the file extension `.mof.json`.
+This [repository](https://github.com/jump-dev/MathOptFormat) describes a
+file-format for mathematical optimization problems called _MathOptFormat_, with
+the file extension `.mof.json`.
 
 MathOptFormat is rigidly defined by the [JSON schema](http://json-schema.org/)
 available at
@@ -23,10 +24,11 @@ structure for mathematical optimization problems. INFORMS Journal on Computing.
 
 ## Implementations
 
-- Julia
+- The [MathOptInterface.jl](https://github.com/jump-dev/MathOptInterface.jl)
+  package supports reading and writing MathOptFormat files.
 
-  - The [MathOptInterface.jl](https://github.com/jump-dev/MathOptInterface.jl) package
-    supports reading and writing MathOptFormat files.
+- Pedagogical Python code for parsing MathOptFormat files into
+  [PuLP](https://coin-or.github.io/pulp/) is available in the [python directory](https://github.com/jump-dev/MathOptFormat/tree/master/python).
 
 ## Standard form
 

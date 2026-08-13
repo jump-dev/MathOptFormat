@@ -1,9 +1,14 @@
+# Copyright (c) 2020: Oscar Dowson and contributors
+#
+# Use of this source code is governed by an MIT-style license that can be found
+# in the LICENSE.md file or at https://opensource.org/licenses/MIT.
+
 import json
 import jsonschema
 import os
 
-
-SCHEMA_FILENAME = '../schemas/mof.1.schema.json'
+ROOT = os.path.dirname(os.path.abspath(__file__)) + "/../"
+SCHEMA_FILENAME = ROOT + 'schemas/mof.1.schema.json'
 
 def validate(filename):
     with open(filename, 'r', encoding='utf-8') as io:
@@ -88,8 +93,8 @@ def summarize_nonlinear(schema):
 ### Validate all the files in the examples directory.
 ###
 
-for filename in os.listdir('../examples'):
-    validate(os.path.join('../examples', filename))
+for filename in os.listdir(ROOT + 'examples'):
+    validate(os.path.join(ROOT + 'examples', filename))
 
 ###
 ### Summarize the schema for the README table.
