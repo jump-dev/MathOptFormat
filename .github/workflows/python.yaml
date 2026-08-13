@@ -14,7 +14,5 @@ jobs:
       with:
         activate-environment: mathoptformat
         environment-file: python/environment.yml
-    - name: Test PuLP
-      run: pytest ./python/run_pulp.py
-    - name: Test Validator
-      run: python ./python/mof.py
+    - run: python -m pytest ./python/run_pulp.py
+    - run: python ./python/mof.py
