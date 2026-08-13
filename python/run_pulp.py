@@ -87,8 +87,7 @@ def read_from_dict(data):
     prob.var_by_name = {}
     for x in data.get("variables", []):
         name = x["name"]
-        prob.var_by_name[name] = \
-            prob.add_variable(name, lowBound=None, upBound=None)
+        prob.var_by_name[name] = prob.add_variable(name, None, None)
     if "function" in obj:
         obj_f = parse_func(obj["function"], prob.var_by_name)
         if obj_f is None:
