@@ -8,6 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -el {0}  # Essential for Conda environment activation
     steps:
     - uses: actions/checkout@v7
     - uses: conda-incubator/setup-miniconda@v4
