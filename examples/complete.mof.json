@@ -149,6 +149,9 @@
         "function": {"type": "VectorOfVariables", "variables": ["u", "v", "w"]},
         "set": {"type": "RelativeEntropyCone", "dimension": 3}
     }, {
+        "function": {"type": "VectorOfVariables", "variables": ["u", "v", "w"]},
+        "set": {"type": "DualRelativeEntropyCone", "dimension": 3}
+    }, {
         "function": {"type": "VectorOfVariables", "variables": ["t", "v", "w"]},
         "set": {"type": "NormSpectralCone", "row_dim": 1, "column_dim": 2}
     }, {
