@@ -35,9 +35,10 @@ structure for mathematical optimization problems. INFORMS Journal on Computing.
 MathOptFormat is a generic file format for mathematical optimization problems
 encoded in the form
 
-       min/max: f₀(x)
-    subject to: fᵢ(x) ∈ Sᵢ  i=1,2,…,I
-
+```
+   min/max: f₀(x)
+subject to: fᵢ(x) ∈ Sᵢ  i=1,2,…,I
+```
 where `x ∈ ℝᴺ`, `fᵢ: ℝᴺ → ℝᴹⁱ`, and `Sᵢ ⊆ ℝᴹⁱ`.
 
 The functions `fᵢ` and sets `Sᵢ` supported by MathOptFormat are defined in the
@@ -51,38 +52,34 @@ additional functions and sets.
 
 The standard form described above is very general. To give a concrete example,
 consider the following linear program:
-
-           min: 2x + 1
-    subject to: x ≥ 1
+```
+       min: 2x + 1
+subject to: x ≥ 1
+```
 
 Encoded in our standard form, we have
-
-    f₀(x) = 2x + 1
-    f₁(x) = x
-    S₁    = [1, ∞)
+```
+f₀(x) = 2x + 1
+f₁(x) = x
+S₁    = [1, ∞)
+```
 
 Encoded into the MathOptFormat file format, this example becomes:
 ```json
 {
-    "version": {
-        "major": 1,
-        "minor": 4
-    },
+    "version": {"major": 1, "minor": 4},
     "variables": [{"name": "x"}],
     "objective": {
         "sense": "min",
         "function": {
             "type": "ScalarAffineFunction",
-            "terms": [
-                {"coefficient": 2, "variable": "x"}
-            ],
+            "terms": [{"coefficient": 2, "variable": "x"}],
             "constant": 1
         }
     },
     "constraints": [{
-        "name": "x >= 1",
         "function": {"type": "Variable", "name": "x"},
-        "set": {"type": "GreaterThan", "lower": 1}
+        "set": {"type": "GreaterThan", "lower": 1},
     }]
 }
 ```
@@ -99,84 +96,81 @@ Inside the document, the model is stored as a single JSON object. JSON objects
 are key-value mappings enclosed by curly braces (`{` and `}`). There are four
 required keys at the top level:
 
- - `"version"`
+1. `"version"`: an object describing the minimum version of MathOptFormat needed
+   to parse the file. This is included to safeguard against later revisions. It
+   contains two fields: `"major"` and `"minor"`. These fields should be
+   interpreted using [SemVer](https://semver.org).
 
-   An object describing the minimum version of MathOptFormat needed to parse
-   the file. This is included to safeguard against later revisions. It contains
-   two fields: `"major"` and `"minor"`. These fields should be interpreted
-   using [SemVer](https://semver.org).
+2. `"variables"`: a list of JSON objects, with one object for each variable in
+   the model. Each object has a required key `"name"` which maps to a unique
+   string for that variable. It is illegal to have two variables with the same
+   name. These names will be used later in the file to refer to each variable.
 
- - `"variables"`
+3. `"objective"`: a JSON objects describing the objective of the model. It has
+   one required key (`"sense"`) and one optional key (`"function"`):
 
-   A list of JSON objects, with one object for each variable in the model. Each
-   object has a required key `"name"` which maps to a unique string for that
-   variable. It is illegal to have two variables with the same name. These names
-   will be used later in the file to refer to each variable.
+   1. `"sense"`: a string which must be `"min"`, `"max"`, or `"feasibility"`. If
+      the sense is `min` or `max`, the key `"function"` must be defined.
 
- - `"objective"`
+   2. `"function"`: a JSON object that describes the function. There are many
+      different types of functions that MathOptFormat recognizes (see
+      [List of supported functions](#list-of-supported-functions)).
 
-   A JSON objects describing the objective of the model. It has one required
-   keys:
-
-    - `"sense"`
-
-      A string which must be `"min"`, `"max"`, or `"feasibility"`. If the sense
-      is `min` or `max`, a second key `"function"`, must be defined:
-
-    - `"function"`
-
-      A JSON object that describes the function. There are many different types
-      of functions that MathOptFormat recognizes (see
-      [List of supported functions](#list-of-supported-functions)), each of
-      which has a different structure. However, each function has a required key
-      called `"type"` which is used to describe the type of the function. In
-      this case, the function is `"ScalarAffineFunction"`.
+      Each function has a required key called `"type"` which is used to describe
+      the type of the function. In our example, the function is
+      `"ScalarAffineFunction"`.
 
       A `"ScalarAffineFunction"` is the function `f(x) = aᵀx + b`, where `a` is
       a constant `N×1` vector, and `b` is a scalar constant. In addition to
       `"type"`, it has two required keys:
 
-      - `"terms"`
+      1. `"terms"`: a list of JSON objects, containing one object for each
+         non-zero element in `a`. Each object has two required keys:
+         `"coefficient"`, and `"variable"`. `"coefficient"` maps to a real number
+         that is the coefficient in `a` corresponding to the variable (identified
+         by its string name) in `"variable"`.
 
-         A list of JSON objects, containing one object for each non-zero element
-         in `a`. Each object has two required keys: `"coefficient"`, and
-         `"variable"`. `"coefficient"` maps to a real number that is the
-         coefficient in `a` corresponding to the variable (identified by its
-         string name) in `"variable"`.
+      2. `"constant"`: the value of `b`.
 
-      - `"constant"`
+4. `"constraints"`: a list of JSON objects, with one element for each constraint
+   in the model.
 
-        The value of `b`.
+   Each object in the list has two required fields:
 
- - `"constraints"`
+   1. `"function"`: a JSON object that describes the function `gⱼ` associated
+      with constraint `j`. The function field is similar to the function field
+      in `"objective"`; however, in this example, our function is the variable `"x"`.
 
-   A list of JSON objects, with one element for each constraint in the model.
-   Each object has three required fields:
-
-    - `"name"`
-
-      A unique string name for the constraint.
-
-    - `"function"`
-
-      A JSON object that describes the function `gⱼ` associated with constraint
-      `j`. The function field is similar to the function field in
-      `"objectives"`; however, in this example, our function is a single
-      variable function of the variable `"x"`.
-
-    - `"set"`
-
-      A JSON object that describes the set `Sⱼ` associated with constraint `j`.
-      In this example, the set `[1, ∞)` is the MathOptFormat set `GreaterThan`
-      with a lower bound of `1`. See [List of supported sets](#list-of-supported-sets)
+   2. `"set"`: a JSON object that describes the set `Sⱼ` associated with
+      constraint `j`. In this example, the set `[1, ∞)` is the MathOptFormat set
+      `"GreaterThan"` with a lower bound of `1`. See [List of supported sets](#list-of-supported-sets)
       for other sets supported by MathOptFormat.
+
+In addition to the required fields, there are optional fields:
+
+ * At the top level, there are optional fields for `"name"`, `"author"`, and
+   `"description"` for storing common metadata about the source of the instance.
+
+ * Each variable may have an optional `"primal_start"` field for storing an
+   initial primal value for the variable. This can be particularly important for
+   nonlinear instances.
+
+ * Each constraint may have optional `"name"`, `"primal_start"` and
+   `"dual_start"` fields. If the function is scalar-valued, `"primal_start"` and
+   `"dual_start"` are scalars; if the function is vector-valued,
+   `"primal_start"` and `"dual_start"` are lists.
+
+## The schema
+
+This section is a summary of the schema. The source of truth is
+[`mof.1.schema.json`](https://jump.dev/MathOptFormat/schemas/mof.1.schema.json).
 
 ### List of supported functions
 
 The list of functions supported by MathOptFormat are contained in the
 `#/definitions/scalar_functions` and `#/definitions/vector_functions` fields of
-the schema. Scalar functions are functions for which `Mi=1`, while vector
-functions are functions for which `Mi≥1`.
+the schema. Scalar functions are functions for which `Mi = 1`, while vector
+functions are functions for which `Mi ≥ 1`.
 
 Here is a summary of the functions defined by MathOptFormat.
 
@@ -184,20 +178,17 @@ Here is a summary of the functions defined by MathOptFormat.
 
 | Name | Description | Example |
 | ---- | ----------- | ------- |
-| `"Variable"` | The scalar variable `x`. | {"type": "Variable", "name": "x"} |
-| `"ScalarAffineFunction"` | The function `a'x + b`, where `a` is a sparse vector specified by a list of `ScalarAffineTerm`s in `terms` and `b` is the scalar in `constant`. Duplicate variables in `terms` are accepted, and the corresponding coefficients are summed together. | {"type": "ScalarAffineFunction", "constant": 1.0, "terms": [{"coefficient": 2.5, "variable": "x"}]} |
-| `"ScalarQuadraticFunction"` | The function `0.5x'Qx + a'x + b`, where `a` is a sparse vector of `ScalarAffineTerm`s in `affine_terms`, `b` is the scalar `constant`, and `Q` is a symmetric matrix specified by a list of `ScalarQuadraticTerm`s in `quadratic_terms`. Duplicate indices in `affine_terms` and `quadratic` are accepted, and the corresponding coefficients are summed together. Mirrored indices in `quadratic_terms` (i.e., `(i,j)` and `(j, i)`) are considered duplicates; only one need to be specified. | {"type": "ScalarQuadraticFunction", "constant": 1.0, "affine_terms": [{"coefficient": 2.5, "variable": "x"}], "quadratic_terms": [{"coefficient": 2.0, "variable_1": "x", "variable_2": "y"}]} |
-| `"ScalarNonlinearFunction"` | An expression graph representing a scalar nonlinear function. |  |
-
-For more information on `"ScalarNonlinearFunction"` functions, see
-[Nonlinear functions](nonlinear-functions).
+| `"Variable"` | The scalar variable `x`. | `{"type": "Variable", "name": "x"}` |
+| `"ScalarAffineFunction"` | The function `a'x + b`, where `a` is a sparse vector specified by a list of `ScalarAffineTerm`s in `terms` and `b` is the scalar in `constant`. Duplicate variables in `terms` are accepted, and the corresponding coefficients are summed together. | `{"type": "ScalarAffineFunction", "constant": 1.0, "terms": [{"coefficient": 2.5, "variable": "x"}]}` |
+| `"ScalarQuadraticFunction"` | The function `0.5x'Qx + a'x + b`, where `a` is a sparse vector of `ScalarAffineTerm`s in `affine_terms`, `b` is the scalar `constant`, and `Q` is a symmetric matrix specified by a list of `ScalarQuadraticTerm`s in `quadratic_terms`. Duplicate indices in `affine_terms` and `quadratic` are accepted, and the corresponding coefficients are summed together. Mirrored indices in `quadratic_terms` (i.e., `(i,j)` and `(j, i)`) are considered duplicates; only one need to be specified. | `{"type": "ScalarQuadraticFunction", "constant": 1.0, "affine_terms": [{"coefficient": 2.5, "variable": "x"}], "quadratic_terms": [{"coefficient": 2.0, "variable_1": "x", "variable_2": "y"}]}` |
+| `"ScalarNonlinearFunction"` | An expression graph representing a scalar nonlinear function. |  For more information on `"ScalarNonlinearFunction"` functions, see [Nonlinear functions](nonlinear-functions). |
 
 #### Vector Functions
 
 | Name | Description | Example |
 | ---- | ----------- | ------- |
-| `"VectorOfVariables"` | An ordered list of variables. | {"type": "VectorOfVariables", "variables": ["x", "y"]} |
-| `"VectorAffineFunction"` | The function `Ax + b`, where `A` is a sparse matrix specified by a list of `VectorAffineTerm`s in `terms` and `b` is a dense vector specified by `constants`. | {"type": "VectorAffineFunction", "constants": [1.0], "terms": [{"output_index": 1, "scalar_term": {"coefficient": 2.5, "variable": "x"}}]} |
+| `"VectorOfVariables"` | An ordered list of variables. | `{"type": "VectorOfVariables", "variables": ["x", "y"]}` |
+| `"VectorAffineFunction"` | The function `Ax + b`, where `A` is a sparse matrix specified by a list of `VectorAffineTerm`s in `terms` and `b` is a dense vector specified by `constants`. | `{"type": "VectorAffineFunction", "constants": [1.0], "terms": [{"output_index": 1, "scalar_term": {"coefficient": 2.5, "variable": "x"}}]}` |
 | `"VectorQuadraticFunction"` | The vector-valued quadratic function `q(x) + Ax + b`, where `q(x)` is specified by a list of `VectorQuadraticTerm`s in `quadratic_terms`, `A` is a sparse matrix specified by a list of `VectorAffineTerm`s in `affine_terms` and `b` is a dense vector specified by `constants`. |  |
 | `"VectorNonlinearFunction"` | The vector-valued nonlinear function `f(x)`, comprised of a vector of `ScalarNonlinearFunction`. |  |
 
@@ -205,75 +196,75 @@ For more information on `"ScalarNonlinearFunction"` functions, see
 
 The list of sets supported by MathOptFormat are contained in the
 `#/definitions/scalar_sets` and `#/definitions/vector_sets` fields of the
-schema. Scalar sets are sets for which `Mj=1`, while vector sets are sets for
-which `Mj≥1`.
+schema. Scalar sets are sets for which `Mi = 1`, while vector sets are sets for
+which `Mi ≥ 1`.
 
 Here is a summary of the sets defined by MathOptFormat.
 
-#### Scalar Sets
+### Scalar Sets
 
 | Name | Description | Example |
 | ---- | ----------- | ------- |
-| `"LessThan"` | (-∞, upper] | {"type": "LessThan", "upper": 2.1} |
-| `"GreaterThan"` | [lower, ∞) | {"type": "GreaterThan", "lower": 2.1} |
-| `"EqualTo"` | {value} | {"type": "EqualTo", "value": 2.1} |
-| `"Interval"` | [lower, upper] | {"type": "Interval", "lower": 2.1, "upper": 3.4} |
-| `"Semiinteger"` | {0} ∪ {lower, lower + 1, ..., upper} | {"type": "Semiinteger", "lower": 2, "upper": 4} |
-| `"Semicontinuous"` | {0} ∪ [lower, upper] | {"type": "Semicontinuous", "lower": 2.1, "upper": 3.4} |
-| `"ZeroOne"` | {0, 1} | {"type": "ZeroOne"} |
-| `"Integer"` | ℤ | {"type": "Integer"} |
-| `"Parameter"` | {value} | {"type": "Parameter", "value": 2.1} |
+| `"LessThan"` | `(-∞, upper]` | `{"type": "LessThan", "upper": 2.1}` |
+| `"GreaterThan"` | `[lower, ∞)` | `{"type": "GreaterThan", "lower": 2.1}` |
+| `"EqualTo"` | `{value}` | `{"type": "EqualTo", "value": 2.1}` |
+| `"Interval"` | `[lower, upper]` | `{"type": "Interval", "lower": 2.1, "upper": 3.4}` |
+| `"Semiinteger"` | `{0} ∪ {lower, lower + 1, ..., upper}` | `{"type": "Semiinteger", "lower": 2, "upper": 4}` |
+| `"Semicontinuous"` | `{0} ∪ [lower, upper]` | `{"type": "Semicontinuous", "lower": 2.1, "upper": 3.4}` |
+| `"ZeroOne"` | `{0, 1}` | `{"type": "ZeroOne"}` |
+| `"Integer"` | `ℤ` | `{"type": "Integer"}` |
+| `"Parameter"` | `{value}` | `{"type": "Parameter", "value": 2.1}` |
 
 #### Vector Sets
 
 | Name | Description | Example |
 | ---- | ----------- | ------- |
-| `"Reals"` | R^{dimension} | {"type": "Reals", "dimension": 3} |
-| `"Zeros"` | {0}^{dimension} | {"type": "Zeros", "dimension": 3} |
-| `"Nonpositives"` | R₋^{dimension} | {"type": "Nonpositives", "dimension": 3} |
-| `"Nonnegatives"` | R₊^{dimension} | {"type": "Nonnegatives", "dimension": 3} |
-| `"HyperRectangle"` | x ∈ {R^d: x_i ∈ [lower_i, upper_i]} | {"type": "HyperRectangle", "lower": [0, 0], "upper": [1, 1]} |
-| `"SecondOrderCone"` | [t, x] ∈ {R^{dimension} : t ≥ \|\|x\|\|₂} | {"type": "SecondOrderCone", "dimension": 3} |
-| `"RotatedSecondOrderCone"` | [t, u, x] ∈ {R^{dimension} : 2tu ≥ (\|\|x\|\|₂)²; t, u ≥ 0} | {"type": "RotatedSecondOrderCone", "dimension": 3} |
-| `"ExponentialCone"` | [x, y, z] ∈ {R³: y * exp(x / y) ≤ z, y ≥ 0} | {"type": "ExponentialCone"} |
-| `"DualExponentialCone"` | [u, v, w] ∈ {R³: -u * exp(v / u) ≤ exp(1) * w, u < 0} | {"type": "DualExponentialCone"} |
-| `"PowerCone"` | [x, y, z] ∈ {R³: x^{exponent} y^{1-exponent} ≥ \|z\|; x, y ≥ 0} | {"type": "PowerCone", "exponent": 2.0} |
-| `"DualPowerCone"` | [u, v, w] ∈ {R³: (u / exponent)^{exponent} (v / (1-exponent))^{1-exponent} ≥ \|w\|; u, v ≥ 0} | {"type": "DualPowerCone", "exponent": 2.0} |
-| `"PositiveSemidefiniteConeTriangle"` | The (vectorized) cone of symmetric positive semidefinite matrices, with `side_dimension` rows and columns. The entries of the upper-right triangular part of the matrix are given column by column (or equivalently, the entries of the lower-left triangular part are given row by row). | {"type": "PositiveSemidefiniteConeTriangle", "side_dimension": 2} |
-| `"PositiveSemidefiniteConeSquare"` | The cone of symmetric positive semidefinite matrices, with side length `side_dimension`. The entries of the matrix are given column by column (or equivalently, row by row). The matrix is both constrained to be symmetric and to be positive semidefinite. That is, if the functions in entries `(i, j)` and `(j, i)` are different, then a constraint will be added to make sure that the entries are equal. | {"type": "PositiveSemidefiniteConeSquare", "side_dimension": 2} |
-| `"Scaled"` | The set in the `set` field, scaled such that the inner product of two elements in the set is the same as the dot product of the two vector functions. This is most useful for solvers which require PSD matrices in _scaled_ form. | {"type": "Scaled", "set": {"type": "PositiveSemidefiniteConeTriangle", "side_dimension": 2}} |
-| `"RootDetConeTriangle"` | {[t, X] ∈ R^{1 + d(d+1)/2} : t ≤ det(X)^{1/d}}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeTriangle`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"type": "RootDetConeTriangle", "side_dimension": 2} |
-| `"RootDetConeSquare"` | {[t, X] ∈ R^{1 + d^2} : t ≤ det(X)^{1/d}, X symmetric}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeSquare`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"type": "RootDetConeSquare", "side_dimension": 2} |
-| `"LogDetConeTriangle"` | {[t, u, X] ∈ R^{2 + d(d+1)/2} : t ≤ u log(det(X/u)), u > 0}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeTriangle`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"type": "LogDetConeTriangle", "side_dimension": 2} |
-| `"LogDetConeSquare"` | {[t, u, X] ∈ R^{2 + d^2} : t ≤ u log(det(X/u)), X symmetric, u > 0}, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeSquare`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | {"type": "LogDetConeSquare", "side_dimension": 2} |
+| `"Reals"` | `R^{dimension}` | `{"type": "Reals", "dimension": 3}` |
+| `"Zeros"` | `{0}^{dimension}` | `{"type": "Zeros", "dimension": 3}` |
+| `"Nonpositives"` | `R₋^{dimension}` | `{"type": "Nonpositives", "dimension": 3}` |
+| `"Nonnegatives"` | `R₊^{dimension}` | `{"type": "Nonnegatives", "dimension": 3}` |
+| `"HyperRectangle"` | `x ∈ {R^d: x_i ∈ [lower_i, upper_i]}` | `{"type": "HyperRectangle", "lower": [0, 0], "upper": [1, 1]}` |
+| `"SecondOrderCone"` | `(t, x) ∈ {R^{dimension} : t ≥ \|\|x\|\|₂}` | `{"type": "SecondOrderCone", "dimension": 3}` |
+| `"RotatedSecondOrderCone"` | `(t, u, x) ∈ {R^{dimension} : 2tu ≥ (\|\|x\|\|₂)²; t, u ≥ 0}` | `{"type": "RotatedSecondOrderCone", "dimension": 3}` |
+| `"ExponentialCone"` | `(x, y, z) ∈ {R³: y * exp(x / y) ≤ z, y > 0}` | `{"type": "ExponentialCone"}` |
+| `"DualExponentialCone"` | `(u, v, w) ∈ {R³: -u * exp(v / u) ≤ exp(1) * w, u < 0}` | `{"type": "DualExponentialCone"}` |
+| `"PowerCone"` | `(x, y, z) ∈ {R³: x^{exponent} y^{1-exponent} ≥ \|z\|; x, y ≥ 0}` | `{"type": "PowerCone", "exponent": 2.0}` |
+| `"DualPowerCone"` | `(u, v, w) ∈ {R³: (u / exponent)^{exponent} (v / (1-exponent))^{1-exponent} ≥ \|w\|; u, v ≥ 0}` | `{"type": "DualPowerCone", "exponent": 2.0}` |
+| `"PositiveSemidefiniteConeTriangle"` | The (vectorized) cone of symmetric positive semidefinite matrices, with `side_dimension` rows and columns. The entries of the upper-right triangular part of the matrix are given column by column (or equivalently, the entries of the lower-left triangular part are given row by row). | `{"type": "PositiveSemidefiniteConeTriangle", "side_dimension": 2}` |
+| `"PositiveSemidefiniteConeSquare"` | The cone of symmetric positive semidefinite matrices, with side length `side_dimension`. The entries of the matrix are given column by column (or equivalently, row by row). The matrix is both constrained to be symmetric and to be positive semidefinite. That is, if the functions in entries `(i, j)` and `(j, i)` are different, then a constraint will be added to make sure that the entries are equal. | `{"type": "PositiveSemidefiniteConeSquare", "side_dimension": 2}` |
+| `"Scaled"` | The set in the `set` field, scaled such that the inner product of two elements in the set is the same as the dot product of the two vector functions. This is most useful for solvers which require PSD matrices in _scaled_ form. | `{"type": "Scaled", "set": {"type": "PositiveSemidefiniteConeTriangle", "side_dimension": 2}}` |
+| `"RootDetConeTriangle"` | `(t, X) ∈ { R^{1 + d(d+1)/2} : t ≤ det(X)^{1/d}}`, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeTriangle`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | `{"type": "RootDetConeTriangle", "side_dimension": 2}` |
+| `"RootDetConeSquare"` | `(t, X) ∈ {R^{1 + d^2} : t ≤ det(X)^{1/d}, X symmetric}`, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeSquare`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | `{"type": "RootDetConeSquare", "side_dimension": 2}` |
+| `"LogDetConeTriangle"` | `(t, u, X) ∈ {R^{2 + d(d+1)/2} : t ≤ u log(det(X/u)), u > 0}`, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeTriangle`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | `{"type": "LogDetConeTriangle", "side_dimension": 2}` |
+| `"LogDetConeSquare"` | `(t, u, X) ∈ {R^{2 + d^2} : t ≤ u log(det(X/u)), X symmetric, u > 0}`, where the matrix `X` is represented in the same symmetric packed format as in the `PositiveSemidefiniteConeSquare`. The argument `side_dimension` is the side dimension of the matrix `X`, i.e., its number of rows or columns. | `{"type": "LogDetConeSquare", "side_dimension": 2}` |
 | `"ScaledPositiveSemidefiniteConeTriangle"` | DEPRECATED: use the Scaled set combinned with PositiveSemidefiniteConeTriangle instead. |  |
-| `"HermitianPositiveSemidefiniteConeTriangle"` | The (vectorized) cone of Hermitian positive semidefinite matrices, with non-negative side_dimension rows and columns. | {"type": "HermitianPositiveSemidefiniteConeTriangle", "side_dimension": 3} |
-| `"NormCone"` | The p-norm cone (t, x) ∈ {R^d : t ≥ (Σᵢ\|xᵢ\|^p)^(1/p)}. | {"type": "NormCone", "dimension": 3, "p": 1.5} |
-| `"NormOneCone"` | (t, x) ∈ {R^{dimension}: t ≥ Σᵢ\|xᵢ\|} | {"type": "NormOneCone", "dimension": 2} |
-| `"NormInfinityCone"` | (t, x) ∈ {R^{dimension}: t ≥ maxᵢ\|xᵢ\|} | {"type": "NormInfinityCone", "dimension": 2} |
-| `"GeometricMeanCone"` | [t, x] ∈ {R^{dimension}: x ≥ 0, t ≤ (Πxᵢ)^{1 / (dimension-1)}} | {"type": "GeometricMeanCone", "dimension": 3} |
-| `"DualGeometricMeanCone"` | [u, v] ∈ {R^{dimension}: v ≥ 0, 0 ≥ u ≥ -n * (Πvᵢ)^{1 / (dimension-1)}} | {"type": "DualGeometricMeanCone", "dimension": 3} |
-| `"RelativeEntropyCone"` | (u, v, w) ∈ {R^{dimension}: u ≥ Σᵢ wᵢlog(wᵢ/vᵢ), vᵢ > 0, wᵢ > 0} | {"type": "RelativeEntropyCone", "dimension": 3} |
-| `"DualRelativeEntropyCone"` | (u, v, w) ∈ {R^{dimension}: ∀i, wᵢ ≥ u(log(u/vᵢ) - 1), vᵢ > 0, u > 0} | {"type": "DualRelativeEntropyCone", "dimension": 3} |
-| `"NormSpectralCone"` | (t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ σ₁(X)} | {"type": "NormSpectralCone", "row_dim": 1, "column_dim": 2} |
-| `"NormNuclearCone"` | (t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ Σᵢ σᵢ(X)} | {"type": "NormNuclearCone", "row_dim": 1, "column_dim": 2} |
-| `"Complements"` | The set corresponding to a mixed complementarity constraint. Complementarity constraints should be specified with an AbstractVectorFunction-in-Complements(dimension) constraint. The dimension of the vector-valued function `F` must be `dimension`. This defines a complementarity constraint between the scalar function `F[i]` and the variable in `F[i + dimension/2]`. Thus, `F[i + dimension/2]` must be interpretable as a single variable `x_i` (e.g., `1.0 * x + 0.0`). The mixed complementarity problem consists of finding `x_i` in the interval `[lb, ub]` (i.e., in the set `Interval(lb, ub)`), such that the following holds: 1. `F_i(x) == 0` if `lb_i < x_i < ub_i`; 2. `F_i(x) >= 0` if `lb_i == x_i`; 3. `F_i(x) <= 0` if `x_i == ub_i`. Classically, the bounding set for `x_i` is `Interval(0, Inf)`, which recovers: `0 <= F_i(x) ⟂ x_i >= 0`, where the `⟂` operator implies `F_i(x) * x_i = 0`. | {"type": "Complements", "dimension": 2} |
-| `"SOS1"` | A special ordered set of type I. | {"type": "SOS1", "weights": [1, 3, 2]} |
-| `"SOS2"` | A special ordered set of type II. | {"type": "SOS2", "weights": [1, 3, 2]} |
-| `"Indicator"` | If `activate_on=one`: (y, x) ∈ {0,1}×Rᴺ: y = 0 ⟹ x ∈ S, otherwise when `activate_on=zero`: (y, x) ∈ {0,1}×Rᴺ: y = 1 ⟹ x ∈ S. | {"type": "Indicator", "set": {"type": "LessThan", "upper": 2.0}, "activate_on": "one"} |
-| `"AllDifferent"` | The set {x in Z^d} such that no two elements in x take the same value and dimension=d. | {"type": "AllDifferent", "dimension": 2} |
-| `"BinPacking"` | The set `{x in Z^d}` where `d = length(w)`, such that each item `i` in `1:d` of weight `w[i]` is put into bin `x[i]`, and the total weight of each bin does not exceed `c`. | {"type": "BinPacking", "capacity": 3.0, "weights": [1.0, 2.0, 3.0]} |
-| `"Circuit"` | The set `{x in {1..d}^d}` that constraints `x` to be a circuit, such that `x_i = j` means that `j` is the successor of `i`, and `dimension = d`. | {"type": "Circuit", "dimension": 3} |
-| `"CountAtLeast"` | The set `{x in Z^{d_1 + d_2 + ldots d_N}}`, where `x` is partitioned into `N` subsets (`{x_1,  ldots, x_{d_1}}`, `{x_{d_1 + 1},  ldots, x_{d_1 + d_2}}` and so on), and at least `n` elements of each subset take one of the values in `set`. | {"type": "CountAtLeast", "n": 1, "partitions": [2, 2], "set": [3]} |
-| `"CountBelongs"` | The set `{(n, x) in Z^{1+d}}`, such that `n` elements of the vector `x` take on of the values in `set` and `dimension = 1 + d`. | {"type": "CountBelongs", "dimension": 3, "set": [3, 4, 5]} |
-| `"CountDistinct"` | The set `{(n, x) in Z^{1+d}}`, such that the number of distinct values in `x` is `n` and `dimension = 1 + d`. | {"type": "CountDistinct", "dimension": 3} |
-| `"CountGreaterThan"` | The set `{(c, y, x) in Z^{1+1+d}}`, such that `c` is strictly greater than the number of occurances of `y` in `x` and `dimension = 1 + 1 + d`. | {"type": "CountGreaterThan", "dimension": 3} |
-| `"Cumulative"` | The set `{(s, d, r, b) in Z^{3n+1}}`, representing the `cumulative` global constraint, where `n == length(s) == length(r) == length(b)` and `dimension = 3n + 1`. `Cumulative` requires that a set of tasks given by start times `s`, durations `d`, and resource requirements `r`, never requires more than the global resource bound `b` at any one time. | {"type": "Cumulative", "dimension": 10} |
-| `"Path"` | Given a graph comprised of a set of nodes `1..N` and a set of arcs `1..E` represented by an edge from node `from[i]` to node `to[i]`, `Path` constrains the set `(s, t, ns, es) in (1..N)times(1..E)times{0,1}^Ntimes{0,1}^E`, to form subgraph that is a path from node `s` to node `t`, where node `n` is in the path if `ns[n]` is `1`, and edge `e` is in the path if `es[e]` is `1`. The path must be acyclic, and it must traverse all nodes `n` for which `ns[n]` is `1`, and all edges `e` for which `es[e]` is `1`. | {"type": "Path", "from": [1, 1, 2, 2, 3], "to": [2, 3, 3, 4, 4]} |
-| `"Table"` | The set `{x in R^d}` where `d = size(table, 2)`, such that `x` belongs to one row of `table`. That is, there exists some `j` in `1:size(table, 1)`, such that `x[i] = table[j, i]` for all `i=1:size(table, 2)`. | {"type": "Table", "table": [[1, 1, 0], [0, 1, 1]]} |
-| `"Reified"` | (z, f(x)) ∈ {R^{dimension}: z iff f(x) ∈ S} | {"type": "Reified", "set": {"type": "GreaterThan", "lower": 0}} |
+| `"HermitianPositiveSemidefiniteConeTriangle"` | The (vectorized) cone of Hermitian positive semidefinite matrices, with non-negative side_dimension rows and columns. | `{"type": "HermitianPositiveSemidefiniteConeTriangle", "side_dimension": 3}` |
+| `"NormCone"` | `(t, x) ∈ {R^d : t ≥ (Σᵢ\|xᵢ\|^p)^(1/p)}` | `{"type": "NormCone", "dimension": 3, "p": 1.5}` |
+| `"NormOneCone"` | `(t, x) ∈ {R^{dimension}: t ≥ Σᵢ\|xᵢ\|}` | `{"type": "NormOneCone", "dimension": 2}` |
+| `"NormInfinityCone"` | `(t, x) ∈ {R^{dimension}: t ≥ maxᵢ\|xᵢ\|}` | `{"type": "NormInfinityCone", "dimension": 2}` |
+| `"GeometricMeanCone"` | `(t, x) ∈ {R^{dimension}: x ≥ 0, t ≤ (Πxᵢ)^{1 / (dimension-1)}}` | `{"type": "GeometricMeanCone", "dimension": 3}` |
+| `"DualGeometricMeanCone"` | `(u, v) ∈ {R^{dimension}: v ≥ 0, 0 ≥ u ≥ -n * (Πvᵢ)^{1 / (dimension-1)}}` | `{"type": "DualGeometricMeanCone", "dimension": 3}` |
+| `"RelativeEntropyCone"` | `(u, v, w) ∈ {R^{dimension}: u ≥ Σᵢ wᵢlog(wᵢ/vᵢ), vᵢ > 0, wᵢ > 0}` | `{"type": "RelativeEntropyCone", "dimension": 3}` |
+| `"DualRelativeEntropyCone"` | `(u, v, w) ∈ {R^{dimension}: ∀i, wᵢ ≥ u(log(u/vᵢ) - 1), vᵢ > 0, u > 0}` | `{"type": "DualRelativeEntropyCone", "dimension": 3}` |
+| `"NormSpectralCone"` | `(t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ σ₁(X)}` | `{"type": "NormSpectralCone", "row_dim": 1, "column_dim": 2}` |
+| `"NormNuclearCone"` | `(t, X) ∈ {R^{1+row_dim×column_dim}: t ≥ Σᵢ σᵢ(X)}` | `{"type": "NormNuclearCone", "row_dim": 1, "column_dim": 2}` |
+| `"Complements"` | The set corresponding to a mixed complementarity constraint. Complementarity constraints should be specified with an AbstractVectorFunction-in-Complements(dimension) constraint. The dimension of the vector-valued function `F` must be `dimension`. This defines a complementarity constraint between the scalar function `F[i]` and the variable in `F[i + dimension/2]`. Thus, `F[i + dimension/2]` must be interpretable as a single variable `x_i` (e.g., `1.0 * x + 0.0`). The mixed complementarity problem consists of finding `x_i` in the interval `[lb, ub]` (i.e., in the set `Interval(lb, ub)`), such that the following holds: 1. `F_i(x) == 0` if `lb_i < x_i < ub_i`; 2. `F_i(x) >= 0` if `lb_i == x_i`; 3. `F_i(x) <= 0` if `x_i == ub_i`. Classically, the bounding set for `x_i` is `Interval(0, Inf)`, which recovers: `0 <= F_i(x) ⟂ x_i >= 0`, where the `⟂` operator implies `F_i(x) * x_i = 0`. | `{"type": "Complements", "dimension": 2}` |
+| `"SOS1"` | A special ordered set of type I. | `{"type": "SOS1", "weights": [1, 3, 2]}` |
+| `"SOS2"` | A special ordered set of type II. | `{"type": "SOS2", "weights": [1, 3, 2]}` |
+| `"Indicator"` | If `activate_on=one`: (y, x) ∈ {0,1}×Rᴺ: y = 0 ⟹ x ∈ S, otherwise when `activate_on=zero`: (y, x) ∈ {0,1}×Rᴺ: y = 1 ⟹ x ∈ S. | `{"type": "Indicator", "set": {"type": "LessThan", "upper": 2.0}, "activate_on": "one"}` |
+| `"AllDifferent"` | The set `{x in Z^d}` such that no two elements in x take the same value and dimension=d. | `{"type": "AllDifferent", "dimension": 2}` |
+| `"BinPacking"` | The set `{x in Z^d}` where `d = length(w)`, such that each item `i` in `1:d` of weight `w[i]` is put into bin `x[i]`, and the total weight of each bin does not exceed `c`. | `{"type": "BinPacking", "capacity": 3.0, "weights": [1.0, 2.0, 3.0]}` |
+| `"Circuit"` | The set `{x in {1..d}^d}` that constraints `x` to be a circuit, such that `x_i = j` means that `j` is the successor of `i`, and `dimension = d`. | `{"type": "Circuit", "dimension": 3}` |
+| `"CountAtLeast"` | The set `{x in Z^{d_1 + d_2 + ldots d_N}}`, where `x` is partitioned into `N` subsets (`{x_1,  ldots, x_{d_1}}`, `{x_{d_1 + 1},  ldots, x_{d_1 + d_2}}` and so on), and at least `n` elements of each subset take one of the values in `set`. | `{"type": "CountAtLeast", "n": 1, "partitions": [2, 2], "set": [3]}` |
+| `"CountBelongs"` | The set `{(n, x) in Z^{1+d}}`, such that `n` elements of the vector `x` take on of the values in `set` and `dimension = 1 + d`. | `{"type": "CountBelongs", "dimension": 3, "set": [3, 4, 5]}` |
+| `"CountDistinct"` | The set `{(n, x) in Z^{1+d}}`, such that the number of distinct values in `x` is `n` and `dimension = 1 + d`. | `{"type": "CountDistinct", "dimension": 3}` |
+| `"CountGreaterThan"` | The set `{(c, y, x) in Z^{1+1+d}}`, such that `c` is strictly greater than the number of occurances of `y` in `x` and `dimension = 1 + 1 + d`. | `{"type": "CountGreaterThan", "dimension": 3}` |
+| `"Cumulative"` | The set `{(s, d, r, b) in Z^{3n+1}}`, representing the `cumulative` global constraint, where `n == length(s) == length(r) == length(b)` and `dimension = 3n + 1`. `Cumulative` requires that a set of tasks given by start times `s`, durations `d`, and resource requirements `r`, never requires more than the global resource bound `b` at any one time. | `{"type": "Cumulative", "dimension": 10}` |
+| `"Path"` | Given a graph comprised of a set of nodes `1..N` and a set of arcs `1..E` represented by an edge from node `from[i]` to node `to[i]`, `Path` constrains the set `(s, t, ns, es) in (1..N)times(1..E)times{0,1}^Ntimes{0,1}^E`, to form subgraph that is a path from node `s` to node `t`, where node `n` is in the path if `ns[n]` is `1`, and edge `e` is in the path if `es[e]` is `1`. The path must be acyclic, and it must traverse all nodes `n` for which `ns[n]` is `1`, and all edges `e` for which `es[e]` is `1`. | `{"type": "Path", "from": [1, 1, 2, 2, 3], "to": [2, 3, 3, 4, 4]}` |
+| `"Table"` | The set `{x in R^d}` where `d = size(table, 2)`, such that `x` belongs to one row of `table`. That is, there exists some `j` in `1:size(table, 1)`, such that `x[i] = table[j, i]` for all `i=1:size(table, 2)`. | `{"type": "Table", "table": [[1, 1, 0], [0, 1, 1]]}` |
+| `"Reified"` | `(z, f(x)) ∈ {R^{dimension}: z iff f(x) ∈ S}` | `{"type": "Reified", "set": {"type": "GreaterThan", "lower": 0}}` |
 
-### Nonlinear functions
+## Nonlinear functions
 
 Nonlinear functions are encoded in MathOptFormat by an expression graph. Each
 expression graphs is stored in Polish prefix notation. For example, the
@@ -288,7 +279,7 @@ other nodes are stored as a flattened list in the `"node_list"` field. We
 elaborate on permissible nodes and how to store them in the following
 subsections.
 
-#### Leaf nodes
+### Leaf nodes
 
 Leaf nodes in the expression graph are data: they can either reference
 optimization variables, or be real or complex valued numeric constants. They are
@@ -296,19 +287,19 @@ described as follows.
 
 | Type | Description | Example |
 | ---- | ----------- | ------- |
-| `number` | A real-valued numeric constant | 1.0 |
-| `string` | A reference to an optimization variable | "x" |
-| `{"type": "complex"}` | A complex-valued numeric constant | {"type": "complex", "real": 1.0, "imag": 2.0} |
+| `number` | A real-valued numeric constant | `1.0` |
+| `string` | A reference to an optimization variable | `"x"` |
+| `{"type": "complex"}` | A complex-valued numeric constant | `{"type": "complex", "real": 1.0, "imag": 2.0}` |
 
 Nodes in the flattened list `"node_list"` can be referenced by an object with
 the `"type"` field `"node"` and a field `"index"` that is the one-based index of
 the node in `"node_list"`.
 
-| Head | Description | Example |
+| Type | Description | Example |
 | ---- | ----------- | ------- |
-| `"node"` | A pointer to a (1-indexed) element in the `node_list` field in a nonlinear function | {"type": "node", "index": 2} |
+| `"node"` | A pointer to a (1-indexed) element in the `node_list` field in a nonlinear function | `{"type": "node", "index": 2}` |
 
-#### Operators
+### Operators
 
 All nonlinear operators in MathOptFormat are described by a JSON object with two
 fields:
@@ -346,7 +337,7 @@ and their corresponding arity.
 | Binary | `"/"`, `"^"`, `"atan"`, `"&&"`, `"\|\|"`, `"<="`, `"<"`, `">="`, `">"`, `"=="` |
 | N-ary  | `"+"`, `"-"`, `"*"`, `"ifelse"`, `"min"`, `"max"` |
 
-#### Example
+### Example
 
 As an example, consider the function `f(x, y) = (1 + 3i) * x + sin^2(x) + y`.
 
@@ -361,13 +352,10 @@ In MathOptFormat, this expression graph can be encoded as follows:
     "type": "+",
     "args": [{"type": "node", "index": 1}, {"type": "node", "index": 3}, "y"]
   },
-  "node_list": [{
-    "type": "*",
-    "args": [{"type": "complex", "real": 1, "imag": 3}, "x"]
-  }, {
-    "type": "sin", "args": ["x"]
-  }, {
-    "type": "^", "args": [{"type": "node", "index": 2}, 2]
-  }]
+  "node_list": [
+    {"type": "*", "args": [{"type": "complex", "real": 1, "imag": 3}, "x"]},
+    {"type": "sin", "args": ["x"]},
+    {"type": "^", "args": [{"type": "node", "index": 2}, 2]}
+  ]
 }
 ```
